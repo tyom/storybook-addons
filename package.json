@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*",
+    "examples"
+  ],
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@storybook/addons": "5.3.14",
+    "@storybook/react": "5.3.14",
+    "babel-loader": "8.0.6",
+    "jest": "^25.1.0",
+    "lint-staged": "^9.2.3",
+    "prettier": "1.19.1"
+  }
+}
