@@ -1,0 +1,23 @@
+{
+  "name": "vue-example",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "storybook": "start-storybook -p 6009 --ci -s ../__fixtures__",
+    "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/vue"
+  },
+  "dependencies": {
+    "element-ui": "^2.13.2",
+    "storybook-fixtures": "0.1.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@storybook/addon-knobs": "^5.3.19",
+    "@storybook/addons": "5.3.19",
+    "@storybook/theming": "5.3.19",
+    "@storybook/vue": "^5.3.19",
+    "babel-preset-vue": "^2.0.2",
+    "vue-loader": "^15.9.2",
+    "vue-template-compiler": "^2.6.11"
+  }
+}

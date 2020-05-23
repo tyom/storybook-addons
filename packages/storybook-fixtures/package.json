@@ -1,0 +1,41 @@
+{
+  "name": "storybook-fixtures",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "del dist && tsc",
+    "watch": "del dist && tsc --watch"
+  },
+  "dependencies": {
+    "@storybook/addon-knobs": "~5.3.19",
+    "@storybook/addons": "~5.3.19",
+    "cross-fetch": "~3.0.4"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "*.js",
+    "*.d.ts"
+  ],
+  "keywords": [
+    "react",
+    "vue",
+    "react-storybook",
+    "vue-storybook",
+    "helper",
+    "fixtures"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tyom/storybook-addons/tree/master/packages/storybook-fixtures"
+  },
+  "author": {
+    "name": "Tyom Semonov",
+    "email": "mail@tyom.net"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "react-example",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "storybook": "start-storybook -p 6006 --ci -s ../__fixtures__",
+    "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/react"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "3.28.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "storybook-fixtures": "0.1.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-knobs": "^5.3.19",
+    "@storybook/addons": "5.3.19",
+    "@storybook/react": "5.3.19",
+    "@storybook/theming": "5.3.19"
+  }
+}
