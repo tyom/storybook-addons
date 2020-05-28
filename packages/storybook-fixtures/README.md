@@ -48,3 +48,20 @@ export const myRemoteFixture = () => {
 };
 
 ```
+
+## Imports
+
+### createFixtureInput(fixtureData, optionLabelKey)
+
+Accepts fixture data as its argument with optional key of fixture data variant 
+to use for knob labels (defaults to the first key with string value). Returns the
+data selected by knob created from the fixture and added to the Storybook panel. 
+
+### getRemoteFixture(url)
+
+Fetches the data from the URL given as its argument and returns parsed JSON.
+
+### useRemoteFixture(url)
+
+React hook to fetch the data from the URL given as its argument and returns the
+selected data variant (as per `createFixtureInput`).
