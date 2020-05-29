@@ -13,7 +13,7 @@
     "cross-fetch": "~3.0.4"
   },
   "peerDependencies": {
-    "react": "^16.13.1"
+    "react": "*"
   },
   "files": [
     "dist/**/*",
@@ -26,12 +26,17 @@
     "vue",
     "react-storybook",
     "vue-storybook",
-    "helper",
+    "addon",
     "fixtures"
   ],
+  "homepage": "https://github.com/tyom/storybook-addons/tree/master/packages/storybook-fixtures",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tyom/storybook-addons/tree/master/packages/storybook-fixtures"
+    "url": "https://github.com/tyom/storybook-addons.git",
+    "directory": "packages/storybook-fixtures"
+  },
+  "bugs": {
+    "url": "https://github.com/tyom/storybook-addons/issues"
   },
   "author": {
     "name": "Tyom Semonov",
