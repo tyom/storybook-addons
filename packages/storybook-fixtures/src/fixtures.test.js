@@ -134,7 +134,8 @@ describe('#createFixtureInput', () => {
           'Variant 1': 'Variant 1',
           'Variant 2': 'Variant 2',
         },
-        'Variant 1'
+        'Variant 1',
+        'Fixtures'
       );
     });
 
@@ -150,7 +151,8 @@ describe('#createFixtureInput', () => {
           'Variant 1': 'Variant 1',
           'Variant 2': 'Variant 2',
         },
-        'Variant 2'
+        'Variant 2',
+        'Fixtures'
       );
     });
 
@@ -167,7 +169,8 @@ describe('#createFixtureInput', () => {
           'Variant 2': 'Variant 2',
         },
         'Variant 1',
-        { display: 'radio' }
+        { display: 'radio' },
+        'Fixtures'
       );
     });
 
@@ -184,7 +187,8 @@ describe('#createFixtureInput', () => {
           'Variant 2': 'Variant 2',
         },
         'Variant 1',
-        { display: 'inline-radio' }
+        { display: 'inline-radio' },
+        'Fixtures'
       );
     });
   });

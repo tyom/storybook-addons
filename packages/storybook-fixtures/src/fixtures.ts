@@ -88,6 +88,8 @@ export function createFixtureInput(fixture: {} | [], optionLabelKey?: string) {
       );
     }
 
+    const groupId = 'Fixtures';
+
     return getSelectedFixture(
       fixture,
       (valuesObj, initialKey) => {
@@ -95,15 +97,27 @@ export function createFixtureInput(fixture: {} | [], optionLabelKey?: string) {
 
         switch (type) {
           case INPUT_TYPES[0]:
-            return optionsKnob(fieldLabel, valuesObj, selectedInput, {
-              display: 'radio',
-            });
+            return optionsKnob(
+              fieldLabel,
+              valuesObj,
+              selectedInput,
+              {
+                display: 'radio',
+              },
+              groupId
+            );
           case INPUT_TYPES[1]:
-            return optionsKnob(fieldLabel, valuesObj, selectedInput, {
-              display: 'inline-radio',
-            });
+            return optionsKnob(
+              fieldLabel,
+              valuesObj,
+              selectedInput,
+              {
+                display: 'inline-radio',
+              },
+              groupId
+            );
           default:
-            return select(fieldLabel, valuesObj, selectedInput);
+            return select(fieldLabel, valuesObj, selectedInput, groupId);
         }
       },
       optionLabelKey
