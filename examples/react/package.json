@@ -14,8 +14,10 @@
   },
   "devDependencies": {
     "@storybook/addon-knobs": "^5.3.19",
+    "@storybook/addon-storysource": "^5.3.19",
     "@storybook/addons": "5.3.19",
     "@storybook/react": "5.3.19",
-    "@storybook/theming": "5.3.19"
+    "@storybook/theming": "5.3.19",
+    "eslint-plugin-vue": "^6.2.2"
   }
 }
