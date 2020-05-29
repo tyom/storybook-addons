@@ -1,4 +1,5 @@
 {
+  "name": "root",
   "private": true,
   "version": "0.1.0",
   "workspaces": [
@@ -52,6 +53,5 @@
       "yarn test:lint --fix",
       "git add"
     ]
-  },
-  "name": "storybook-addons-dev"
+  }
 }
