@@ -16,7 +16,7 @@ import mockCollection from './mock-collection.json';
 
 const MyComponent = ({ data }) => <div>{JSON.stringify(data)}</div>;
 
-// Map data to Storybook Knobs. Data must be and object with keys 
+// Map data to Storybook Knobs. Data must be an object with keys 
 // mapped to variants, or an array of objects, which automatically 
 // map to variants.
 // Second argument is a variant object key to use for knob option label.
@@ -51,17 +51,19 @@ export const myRemoteFixture = () => {
 
 ## Imports
 
-### createFixtureInput(fixtureData, optionLabelKey)
+### createFixtureInput(fixtureData, optionLabelKey?)
 
 Accepts fixture data as its argument with optional key of fixture data variant 
-to use for knob labels (defaults to the first key with string value). Returns the
+to use for knob labels (defaults to the fixture object key for each variant, 
+in case of array to incremented label, e.g. 'Variant 1'). Returns the
 data selected by knob created from the fixture and added to the Storybook panel. 
 
 ### getRemoteFixture(url)
 
 Fetches the data from the URL given as its argument and returns parsed JSON.
 
-### useRemoteFixture(url)
+### useRemoteFixture(url, optionLabelKey?)
 
 React hook to fetch the data from the URL given as its argument and returns the
-selected data variant (as per `createFixtureInput`).
+selected data variant (as per `createFixtureInput`). The seconda argument is
+passed down to `createFixtureInput`.

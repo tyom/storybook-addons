@@ -6,9 +6,9 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "lerna run build && yarn examples:build",
+    "build": "lerna run build",
     "watch": "lerna run watch --parallel",
-    "test": "yarn test:lint && yarn test:unit && yarn test:e2e",
+    "test": "yarn examples:build && yarn test:lint && yarn test:unit && yarn test:e2e",
     "test:lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs .",
     "test:unit": "jest",
     "test:e2e": "testcafe chrome:headless test/e2e/*.test.js --app 'yarn examples:serve'",

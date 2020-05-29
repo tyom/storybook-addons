@@ -17,20 +17,19 @@ const INPUT_TYPES = ['radio', 'inline-radio', 'select'];
  */
 function getOptionsFromFixture(
   fixture: object,
-  optionLabelKey = (val: string) =>
-    Object.entries(val).filter(([, v]) => typeof v === 'string')[0][1]
+  optionLabelKey = (val: {}, key: string) => key
 ): IFixtureOptions {
   if (!fixture) {
     throw new Error('Fixture is required');
   }
   const optionsArray = Array.isArray(fixture)
-    ? fixture.map((x, i) => [`option-${i + 1}`, x])
+    ? fixture.map((x, i) => [`Variant ${i + 1}`, x])
     : Object.entries(fixture);
 
   const valuesObj = optionsArray.reduce((acc, [key, value], idx) => {
     const label =
       typeof optionLabelKey === 'function'
-        ? optionLabelKey(value)
+        ? optionLabelKey(value, key)
         : value[optionLabelKey] || `${idx + 1}: ${optionLabelKey} not found`;
 
     return {

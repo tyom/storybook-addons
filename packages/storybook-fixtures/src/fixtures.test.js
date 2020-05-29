@@ -17,8 +17,8 @@ const mockFixtureCollection = [
 ];
 
 const mockFixtureObj = {
-  first: mockFixtureCollection[0],
-  second: mockFixtureCollection[1],
+  First: mockFixtureCollection[0],
+  Second: mockFixtureCollection[1],
 };
 
 test('requires fixture object as argument', () => {
@@ -32,10 +32,10 @@ describe('#getSelectedFixture', () => {
 
     expect(selectAddon).toHaveBeenCalledWith(
       {
-        Adam: 'first',
-        Victor: 'second',
+        First: 'First',
+        Second: 'Second',
       },
-      'first'
+      'First'
     );
 
     expect(selectedFixture).toEqual(mockFixtureObj.first);
@@ -47,10 +47,10 @@ describe('#getSelectedFixture', () => {
 
     expect(selectAddon).toHaveBeenCalledWith(
       {
-        Architect: 'first',
-        Plumber: 'second',
+        Architect: 'First',
+        Plumber: 'Second',
       },
-      'first'
+      'First'
     );
   });
 
@@ -60,10 +60,10 @@ describe('#getSelectedFixture', () => {
 
     expect(selectAddon).toHaveBeenCalledWith(
       {
-        '1: address not found': 'first',
-        '2: address not found': 'second',
+        '1: address not found': 'First',
+        '2: address not found': 'Second',
       },
-      'first'
+      'First'
     );
   });
 
@@ -77,10 +77,10 @@ describe('#getSelectedFixture', () => {
 
     expect(selectAddon).toHaveBeenCalledWith(
       {
-        'Adam - 36': 'first',
-        'Victor - 43': 'second',
+        'Adam - 36': 'First',
+        'Victor - 43': 'Second',
       },
-      'first'
+      'First'
     );
   });
 
@@ -90,10 +90,10 @@ describe('#getSelectedFixture', () => {
 
     expect(selectAddon).toHaveBeenCalledWith(
       {
-        Adam: 'option-1',
-        Victor: 'option-2',
+        'Variant 1': 'Variant 1',
+        'Variant 2': 'Variant 2',
       },
-      'option-1'
+      'Variant 1'
     );
   });
 });
@@ -131,26 +131,26 @@ describe('#createFixtureInput', () => {
       expect(select).toHaveBeenCalledWith(
         'Select:',
         {
-          Adam: 'option-1',
-          Victor: 'option-2',
+          'Variant 1': 'Variant 1',
+          'Variant 2': 'Variant 2',
         },
-        'option-1'
+        'Variant 1'
       );
     });
 
     test('initial selection', () => {
       const inputCreator = createFixtureInput(mockFixtureCollection);
       inputCreator('Select:', {
-        initial: 'option-2',
+        initial: 'Variant 2',
       });
 
       expect(select).toHaveBeenCalledWith(
         'Select:',
         {
-          Adam: 'option-1',
-          Victor: 'option-2',
+          'Variant 1': 'Variant 1',
+          'Variant 2': 'Variant 2',
         },
-        'option-2'
+        'Variant 2'
       );
     });
 
@@ -163,10 +163,10 @@ describe('#createFixtureInput', () => {
       expect(optionsKnob).toHaveBeenCalledWith(
         'Select:',
         {
-          Adam: 'option-1',
-          Victor: 'option-2',
+          'Variant 1': 'Variant 1',
+          'Variant 2': 'Variant 2',
         },
-        'option-1',
+        'Variant 1',
         { display: 'radio' }
       );
     });
@@ -180,10 +180,10 @@ describe('#createFixtureInput', () => {
       expect(optionsKnob).toHaveBeenCalledWith(
         'Select:',
         {
-          Adam: 'option-1',
-          Victor: 'option-2',
+          'Variant 1': 'Variant 1',
+          'Variant 2': 'Variant 2',
         },
-        'option-1',
+        'Variant 1',
         { display: 'inline-radio' }
       );
     });

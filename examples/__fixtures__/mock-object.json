@@ -1,17 +1,17 @@
 {
-  "o1": {
+  "Variant #1": {
     "first_name": "Raleigh",
     "last_name": "Pullan",
     "email": "rpullan1@imgur.com",
     "description": "Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque. Duis bibendum."
   },
-  "o2": {
+  "Variant #2": {
     "first_name": "Lannie",
     "last_name": "Shortcliffe",
     "email": "lshortcliffe8@shutterfly.com",
     "description": "In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo. Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante. Vivamus tortor. Duis mattis egestas metus."
   },
-  "o3": {
+  "Variant #3": {
     "first_name": "Aldrich",
     "last_name": "Dunston",
     "email": "adunston5@storify.com",

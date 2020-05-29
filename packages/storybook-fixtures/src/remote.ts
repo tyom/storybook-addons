@@ -5,7 +5,7 @@ import { createFixtureInput } from './fixtures';
 export const getRemoteFixture = async (url) =>
   fetch(url).then((res) => res.json());
 
-export function useRemoteFixture(url: string) {
+export function useRemoteFixture(url: string, optionLabelKey?: string) {
   const [value, setValue] = useState({});
   const [loaded, setLoaded] = useState(false);
 
@@ -16,5 +16,5 @@ export function useRemoteFixture(url: string) {
     });
   }, [url]);
 
-  return loaded ? createFixtureInput(value) : () => {};
+  return loaded ? createFixtureInput(value, optionLabelKey) : () => {};
 }

@@ -29,11 +29,15 @@ const UserCard = ({ first_name, last_name, email, description }) => (
 
 const collectionFixtureInput = createFixtureInput(mockCollection);
 const objectFixtureInput = createFixtureInput(mockObject);
+const objectFixtureInput2 = createFixtureInput(
+  mockObject,
+  (variant, key) => `${key} - ${variant.last_name}`
+);
 
 export const collectionFixture = () => {
   const fixture = collectionFixtureInput('Select variant:', {
     type: 'radio',
-    initial: 'option-5',
+    initial: 'Variant 5',
   });
   return <UserCard {...fixture} />;
 };
@@ -47,13 +51,13 @@ export const objectFixtureRadio = () => {
 };
 
 export const objectFixtureSelect = () => {
-  const fixture = collectionFixtureInput('Select variant');
+  const fixture = objectFixtureInput2('Select variant');
 
   return <UserCard {...fixture} />;
 };
 
 export const remoteFixture = () => {
-  const input = useRemoteFixture('./mock-collection.json');
+  const input = useRemoteFixture('./mock-collection.json', 'first_name');
   const fixture = input('Select variant:', {
     type: 'radio',
   });

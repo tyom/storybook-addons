@@ -9,6 +9,10 @@ export default {
 
 const collectionFixtureInput = createFixtureInput(mockCollection);
 const objectFixtureInput = createFixtureInput(mockObject);
+const objectFixtureInput2 = createFixtureInput(
+  mockObject,
+  (variant, key) => `${key} - ${variant.last_name}`
+);
 
 const commonStory = {
   template: `
@@ -34,7 +38,7 @@ export const collectionFixture = () => ({
     fixture: {
       default: collectionFixtureInput('Select variant', {
         type: 'radio',
-        initial: 'option-5',
+        initial: 'Variant 5',
       }),
     },
   },
@@ -45,7 +49,7 @@ export const objectFixtureRadio = () => ({
   props: {
     fixture: {
       default: objectFixtureInput('Select variant', {
-        type: 'radio',
+        type: 'inline-radio',
       }),
     },
   },
@@ -55,7 +59,7 @@ export const objectFixtureSelect = () => ({
   ...commonStory,
   props: {
     fixture: {
-      default: collectionFixtureInput('Select variant'),
+      default: objectFixtureInput2('Select variant'),
     },
   },
 });
@@ -66,7 +70,7 @@ export const objectFixtureSelect = () => ({
 // it as a static prop.
 (async () => {
   const collection = await getRemoteFixture('./mock-collection.json');
-  const knobInput = createFixtureInput(collection);
+  const knobInput = createFixtureInput(collection, 'first_name');
 
   storiesOf('storybook-fixtures', module).add('Remote Fixture', () => {
     return {
