@@ -1,6 +1,6 @@
 # Tyom's Storybook Add-ons
 
-![Builder](https://github.com/tyom/storybook-addons/workflows/Builder/badge.svg) 
+[![Builder](https://github.com/tyom/storybook-addons/workflows/Builder/badge.svg)](https://github.com/tyom/storybook-addons/actions?query=workflow%3ABuilder)
 [![Deployer](https://github.com/tyom/storybook-addons/workflows/Deployer/badge.svg)](https://tyom.github.io/storybook-addons/)
 
 ## Examples
