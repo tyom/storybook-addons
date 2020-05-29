@@ -5,7 +5,7 @@ Add static fixtures to your components by using local JSON files or remote endpo
 ## Install
 
 ```
-npm install -D storybook-fixtures 
+npm install -D storybook-fixtures
 ```
 
 ## Usage
@@ -16,15 +16,15 @@ import mockCollection from './mock-collection.json';
 
 const MyComponent = ({ data }) => <div>{JSON.stringify(data)}</div>;
 
-// Map data to Storybook Knobs. Data must be an object with keys 
-// mapped to variants, or an array of objects, which automatically 
+// Map data to Storybook Knobs. Data must be an object with keys
+// mapped to variants, or an array of objects, which automatically
 // map to variants.
 // Second argument is a variant object key to use for knob option label.
-// Can be a function which receives variant object as its argument. 
+// Can be a function which receives variant object as its argument.
 const collectionFixtureInput = createFixtureInput(mockCollection, 'title');
 
 export const myLocalFixture = () => {
-  // Storybook knob is created and currently selected variant is stored in variable   
+  // Storybook knob is created and currently selected variant is stored in variable
   const fixture = collectionFixtureInput('Select variant:', {
     type: 'radio', // radio, inline-radio, select
     initial: 'option-5', // initially selected option
@@ -46,17 +46,16 @@ export const myRemoteFixture = () => {
 
   return <MyComponent data={fixture} />;
 };
-
 ```
 
 ## Imports
 
 ### createFixtureInput(fixtureData, optionLabelKey?)
 
-Accepts fixture data as its argument with optional key of fixture data variant 
-to use for knob labels (defaults to the fixture object key for each variant, 
+Accepts fixture data as its argument with optional key of fixture data variant
+to use for knob labels (defaults to the fixture object key for each variant,
 in case of array to incremented label, e.g. 'Variant 1'). Returns the
-data selected by knob created from the fixture and added to the Storybook panel. 
+data selected by knob created from the fixture and added to the Storybook panel.
 
 ### getRemoteFixture(url)
 
