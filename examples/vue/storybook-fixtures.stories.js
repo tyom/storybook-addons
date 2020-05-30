@@ -1,47 +1,86 @@
-import { createFixtureInput } from 'storybook-fixtures';
-import mockCollection from '../__fixtures__/mock-collection.json';
-import mockObject from '../__fixtures__/mock-object.json';
-import UserCard from './UserCard.vue';
+import { withFixtures, keyBy } from 'storybook-fixtures';
+import 'tailwindcss/dist/utilities.css';
+import pantheraData from '../__fixtures__/panthera.json';
+
+const pantheraCollection = Object.values(pantheraData);
+
+const Card = {
+  template: `
+    <div class="font-sans text-gray-800 max-w-sm rounded overflow-hidden shadow-lg bg-white">
+      <div
+        v-if='fixture.thumbnail'
+        class="bg-cover h-64"
+        :style="backgroundImageStyle"
+      />
+      <div class="px-6 py-4">
+        <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0">
+          {{ fixture.title }}
+        </h2>
+        <div class="text-gray-700 text-base" v-html="fixture.extract_html" />
+      </div>
+    </div>
+  `,
+  computed: {
+    backgroundImageStyle() {
+      return {
+        backgroundImage: `url('${this.fixture.thumbnail.source}')`,
+      };
+    },
+  },
+};
 
 export default {
   title: 'storybook-fixtures',
+  decorators: [
+    withFixtures({
+      collection: pantheraCollection,
+    }),
+  ],
 };
 
-const collectionFixtureInput = createFixtureInput(mockCollection);
-const objectFixtureInput = createFixtureInput(mockObject);
-const objectFixtureInput2 = createFixtureInput(
-  mockObject,
-  (variant, key) => `${key} - ${variant.last_name}`
-);
-
-export const collectionFixture = () => ({
-  ...UserCard,
+export const collectionFixture = ({ fixture }) => ({
+  ...Card,
   props: {
     fixture: {
-      default: collectionFixtureInput('Select variant', {
-        type: 'radio',
-        initial: 'Variant 5',
-      }),
+      default: fixture,
     },
   },
 });
 
-export const objectFixtureRadio = () => ({
-  ...UserCard,
+export const objectFixture = ({ fixture }) => ({
+  ...Card,
   props: {
     fixture: {
-      default: objectFixtureInput('Select variant', {
-        type: 'inline-radio',
-      }),
+      default: fixture,
     },
   },
 });
+objectFixture.story = {
+  parameters: {
+    fixtures: {
+      'Panthera Genus': pantheraData,
+      'Keyed collection': keyBy(pantheraCollection, 'description'),
+    },
+  },
+};
 
-export const objectFixtureSelect = () => ({
-  ...UserCard,
+export const remoteFixture = ({ fixture }) => ({
+  ...Card,
   props: {
     fixture: {
-      default: objectFixtureInput2('Select variant'),
+      default: fixture,
     },
   },
 });
+remoteFixture.story = {
+  parameters: {
+    fixtures: {
+      Neofelis: {
+        'Clouded Leopard':
+          'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
+        'Sunda Clouded Leopard':
+          'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
+      },
+    },
+  },
+};

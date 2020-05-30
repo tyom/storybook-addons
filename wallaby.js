@@ -1,5 +1,5 @@
 module.exports = () => ({
   autoDetect: true,
-  files: ['packages/src/**/*.js'],
-  tests: ['packages/**/*.test.js'],
+  files: [{ pattern: 'packages/**/src/**/*.ts?(x)' }],
+  tests: ['packages/**/*.test.js', 'packages/**/*.test.ts'],
 });

@@ -3,4 +3,5 @@ storybook-static/
 dist/
 .cache/
 *.log
+coverage/
 examples/build/*/

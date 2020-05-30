@@ -1,12 +1,9 @@
 module.exports = {
   root: true,
-  extends: [
-    '@storybook/eslint-config-storybook',
-    'plugin:testcafe/recommended',
-  ],
+  extends: ['@storybook/eslint-config-storybook', 'plugin:testcafe/recommended'],
   overrides: [
     {
-      files: ['**/*.ts', '**/*.stories.js'],
+      files: ['**/*.ts', '**/*.tsx', '**/*.stories.js'],
       rules: {
         'react/prop-types': 'off',
       },

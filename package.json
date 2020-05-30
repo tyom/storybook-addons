@@ -9,10 +9,10 @@
   "scripts": {
     "build": "lerna run build",
     "watch": "lerna run watch --parallel",
-    "test": "yarn examples:build && yarn test:lint && yarn test:unit && yarn test:e2e",
+    "test": "yarn examples:build && yarn test:lint && yarn test:unit && yarn test:func",
     "test:lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs .",
     "test:unit": "jest",
-    "test:e2e": "testcafe chrome:headless test/e2e/*.test.js --app 'yarn examples:serve'",
+    "test:func": "testcafe test/functional/*.test.js",
     "storybooks": "lerna run storybook --parallel",
     "examples": "yarn examples:build && yarn examples:serve",
     "examples:build": "lerna run build-storybook",

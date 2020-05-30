@@ -1,70 +1,72 @@
 import React from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Button,
-  Card,
-  Classes,
-  H5,
-} from '@blueprintjs/core';
-import { createFixtureInput, useRemoteFixture } from 'storybook-fixtures';
-import '@blueprintjs/core/lib/css/blueprint.css';
-import mockCollection from '../__fixtures__/mock-collection.json';
-import mockObject from '../__fixtures__/mock-object.json';
+import { withFixtures, keyBy } from 'storybook-fixtures';
+import 'tailwindcss/dist/utilities.css';
+import pantheraData from '../__fixtures__/panthera.json';
+
+const pantheraCollection = Object.values(pantheraData);
 
 export default {
   title: 'storybook-fixtures',
+  decorators: [
+    withFixtures({
+      collection: pantheraCollection,
+    }),
+  ],
 };
 
-const UserCard = ({ first_name, last_name, email, description }) => (
-  <Card>
-    <H5>{[first_name, last_name].join(' ')}</H5>
-    <FormGroup label="Label" labelFor="text-input" labelInfo="(required)">
-      <InputGroup readOnly value={email} />
-    </FormGroup>
-    <p>{description}</p>
-    <Button text="Save" className={Classes.BUTTON} />
-  </Card>
-);
-
-const collectionFixtureInput = createFixtureInput(mockCollection);
-const objectFixtureInput = createFixtureInput(mockObject);
-const objectFixtureInput2 = createFixtureInput(
-  mockObject,
-  (variant, key) => `${key} - ${variant.last_name}`
-);
-
-export const collectionFixture = () => {
-  const fixture = collectionFixtureInput('Select variant:', {
-    type: 'radio',
-    initial: 'Variant 5',
-  });
-  return <UserCard {...fixture} />;
+// Styling with Tailwind CSS https://tailwindcss.com
+const Card = ({ title, thumbnail, extract_html }) => {
+  return (
+    <div className="font-sans text-gray-800 max-w-sm rounded overflow-hidden shadow-lg bg-white">
+      {thumbnail && (
+        <div
+          className="bg-cover h-64"
+          style={{ backgroundImage: `url('${thumbnail.source}')` }}
+        />
+      )}
+      <div className="px-6 py-4">
+        <h2 data-id="title" className="font-bold text-2xl mb-2 mt-0">
+          {title}
+        </h2>
+        {/* eslint-disable-next-line react/no-danger */}
+        <div
+          className="text-gray-700 text-base"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: extract_html }}
+        />
+      </div>
+    </div>
+  );
 };
 
-export const objectFixtureRadio = () => {
-  const fixture = objectFixtureInput('Select variant', {
-    type: 'inline-radio',
-  });
-
-  return <UserCard {...fixture} />;
+export const collectionFixture = ({ fixture }) => {
+  return <Card {...fixture} />;
 };
 
-export const objectFixtureSelect = () => {
-  const fixture = objectFixtureInput2('Select variant');
-
-  return <UserCard {...fixture} />;
+export const objectFixture = ({ fixture }) => {
+  return <Card {...fixture} />;
+};
+objectFixture.story = {
+  parameters: {
+    fixtures: {
+      'Panthera Genus': pantheraData,
+      'Keyed collection': keyBy(pantheraCollection, 'description'),
+    },
+  },
 };
 
-export const remoteFixture = () => {
-  const input = useRemoteFixture('./mock-collection.json', 'first_name');
-  const fixture = input('Select variant:', {
-    type: 'radio',
-  });
-
-  if (!fixture) {
-    return null;
-  }
-
-  return <UserCard {...fixture} />;
+export const remoteFixture = ({ fixture }) => {
+  return <Card {...fixture} />;
+};
+remoteFixture.story = {
+  parameters: {
+    fixtures: {
+      Neofelis: {
+        'Clouded Leopard':
+          'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
+        'Sunda Clouded Leopard':
+          'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
+      },
+    },
+  },
 };
