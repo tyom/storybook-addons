@@ -1,5 +1,8 @@
 # storybook-fixtures
 
+[![react examples](https://img.shields.io/badge/react-blueviolet?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/react)
+[![vue examples](https://img.shields.io/badge/vue-brightgreen?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/vue)
+
 Add data fixtures to your components by using local data (JSON files or hardcoded) or even URLs to fetch the data from.
 
 ![storybook-fixtures screenshot](../../docs/storybook-fixtures.png)
