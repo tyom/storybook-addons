@@ -10,6 +10,13 @@ Add data fixtures to your components by using local data (JSON files or hardcode
 npm install -D storybook-fixtures
 ```
 
+Add `storybook-fixtures` to your addons list in `.storybook/main.js`
+```js
+module.exports = {
+  addons: ['storybook-fixtures'],
+};
+```
+
 ## Usage
 
 ```js
