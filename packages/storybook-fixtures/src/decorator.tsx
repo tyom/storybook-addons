@@ -12,7 +12,11 @@ import { ADDON_ID, PARAM_KEY, Events } from '.';
 let selectedVariant;
 
 function getVariant(fixtures = {}, sectionId, idx = 0) {
-  const [firstFixtureKey] = Object.entries(fixtures)[0];
+  const entries = Object.entries(fixtures);
+  if (!entries.length) {
+    return {};
+  }
+  const [firstFixtureKey] = entries[0];
   const variants = Object.entries(fixtures[sectionId || firstFixtureKey]);
   const [, variant] = variants[idx];
 
@@ -33,7 +37,12 @@ export const withFixtures = makeDecorator({
       ...options,
       ...parameters,
     };
+
     const channel = addons.getChannel();
+    const fixtureKeys = Object.keys(storyOptions);
+    if (!fixtureKeys.length) {
+      selectedVariant = {};
+    }
 
     // Initialise to static fixture (in manager)
     const initialVariant = getVariant(storyOptions, query.fixture, query.variant);
