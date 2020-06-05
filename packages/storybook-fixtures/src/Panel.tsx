@@ -58,7 +58,7 @@ export async function fetchRemotes(
 const FixturesMenu = styled.menu`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-  grid-auto-rows: minmax(3rem, 10rem);
+  grid-auto-rows: minmax(3rem, 8rem);
   grid-gap: 0.5rem;
   padding: 0.5rem;
   margin: 0;
@@ -85,7 +85,7 @@ const FixtureButton = styled.button`
     background-color: ${({ theme }) => theme.barBg};
   }
 
-  &.active:not(:active) {
+  &.active {
     border-color: ${({ theme }) => theme.color.secondary};
   }
 
