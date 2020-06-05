@@ -66,6 +66,8 @@ export const withFixtures = makeDecorator({
 
       return () => {
         channel.off(Events.CHANGE, handleFixtureChange);
+        selectedVariant = null;
+        channel.emit(Events.INIT, {});
       };
     }, []);
 
