@@ -7,11 +7,6 @@ const pantheraCollection = Object.values(pantheraData);
 
 export default {
   title: 'storybook-fixtures',
-  decorators: [
-    withFixtures({
-      collection: pantheraCollection,
-    }),
-  ],
 };
 
 // Styling with Tailwind CSS https://tailwindcss.com
@@ -42,31 +37,57 @@ const Card = ({ title, thumbnail, extract_html }) => {
 export const collectionFixture = ({ fixture }) => {
   return <Card {...fixture} />;
 };
+collectionFixture.story = {
+  decorators: [
+    withFixtures({
+      collection: pantheraCollection,
+    }),
+  ],
+};
 
 export const objectFixture = ({ fixture }) => {
   return <Card {...fixture} />;
 };
 objectFixture.story = {
-  parameters: {
-    fixtures: {
+  decorators: [
+    withFixtures({
       'Panthera Genus': pantheraData,
       'Keyed collection': keyBy(pantheraCollection, 'description'),
-    },
-  },
+    }),
+  ],
 };
 
 export const remoteFixture = ({ fixture }) => {
   return <Card {...fixture} />;
 };
 remoteFixture.story = {
-  parameters: {
-    fixtures: {
+  decorators: [
+    withFixtures({
       Neofelis: {
         'Clouded Leopard':
           'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
         'Sunda Clouded Leopard':
           'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
       },
-    },
+    }),
+  ],
+};
+
+export const noFixture = () => (
+  <Card
+    title="No fixture"
+    extract_html="<p>For testing fixture state when switching to stories which don’t use it.</p>"
+  />
+);
+
+export const disabledFixture = () => (
+  <Card
+    title="Disable fixture"
+    extract_html="<p>For testing fixture state when switching to stories which disable it.</p>"
+  />
+);
+disabledFixture.story = {
+  parameters: {
+    fixtures: { disabled: true },
   },
 };

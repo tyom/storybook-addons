@@ -58,10 +58,6 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.selectSidebarItem('Remote Fixture');
     await page.selectPanel('Fixtures');
     // Ensure first variant is selected by default
-    await page.assertTextInPreview(titleSelector, 'Tiger');
-
-    await page.selectFixture('Neofelis');
-    // Ensure first variant is selected by default
     await page.assertTextInPreview(titleSelector, 'Clouded leopard');
     await page.selectVariant('Sunda Clouded Leopard');
     await page.assertTextInPreview(titleSelector, 'Sunda clouded leopard');
@@ -70,9 +66,6 @@ for (const { urlPath, fixtureName } of useCases) {
   test('Remember selections between fixtures', async () => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
-    await page.assertTextInPreview(titleSelector, 'Tiger');
-    await page.selectVariant('Variant 3');
-    await page.assertTextInPreview(titleSelector, 'Jaguar');
 
     await page.selectFixture('Panthera Genus');
     await page.assertTextInPreview(titleSelector, 'Tiger');
@@ -86,14 +79,12 @@ for (const { urlPath, fixtureName } of useCases) {
 
     await page.selectFixture('Panthera Genus');
     await page.assertTextInPreview(titleSelector, 'Lion');
-    await page.selectFixture('Collection');
-    await page.assertTextInPreview(titleSelector, 'Jaguar');
   });
 
   test('Open selection in new tab on its own', async (t) => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
-    await page.selectVariant('Variant 3');
+    await page.selectVariant('Jaguar');
     await page.assertTextInPreview(titleSelector, 'Jaguar');
     await page.openCanvasInNewTab();
 
@@ -103,5 +94,20 @@ for (const { urlPath, fixtureName } of useCases) {
     await t.expect(sidebarExists).notOk();
     await t.expect(panelDrawerExists).notOk();
     await t.expect(Selector(titleSelector).innerText).eql('Jaguar');
+  });
+
+  test('No fixture defined', async (t) => {
+    await page.selectSidebarItem('No Fixture');
+
+    await t.expect(page.panelTabs.find('button').withText('Fixtures').exists).ok();
+    await t.expect(page.fixtureTabs.find('button').exists).notOk();
+
+  });
+
+  test('Disabled fixtures panel', async (t) => {
+    await page.selectSidebarItem('Disabled Fixture');
+
+    await t.expect(page.panelTabs.find('button').withText('Fixtures').exists).notOk();
+    await t.expect(page.fixtureTabs.find('button').exists).notOk();
   });
 }
