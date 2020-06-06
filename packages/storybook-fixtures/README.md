@@ -5,7 +5,7 @@
 
 Add data fixtures to your components by using local data (JSON files or hardcoded) or even URLs to fetch the data from.
 
-![storybook-fixtures screenshot](../../docs/storybook-fixtures.png)
+![storybook-fixtures screenshot](https://raw.githubusercontent.com/tyom/storybook-addons/master/docs/storybook-fixtures.png)
 
 ## Install
 
