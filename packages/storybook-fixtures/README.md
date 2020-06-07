@@ -20,7 +20,14 @@ module.exports = {
 };
 ```
 
+A new 'Fixtures' panel will appear which contains fixture sections as sub tabs.
+Fixture sections contain fixture variants which can be toggled by clicking or
+keyboard shortcuts - keys `1` to `9` correspond to the first 9 variants. 
+
 ## Usage
+
+Fixture definitions must contain fixture section name as key and variants as
+its properties.
 
 ```js
 import { withFixtures } from 'storybook-fixtures';
@@ -31,6 +38,7 @@ export default {
   title: 'storybook-fixtures',
   decorators: [
     withFixtures({
+      // fixture sections
       collection: pantheraData,
     }),
   ],
@@ -50,13 +58,19 @@ export const myRemoteFixture = ({ fixture }) => {
 myRemoteFixture.story = {
   parameters: {
     fixtures: {
+      // fixture sections
       remoteFixtures: {
+        // variants
         'My remote fixture': 'https://example.com/data.json'
       }
     }  
   }
 }
-```
+``` 
+
+Each variant can be either contain the data, or a URL to fetch the data. The data
+for all URLs (a variant string value is assumed as URL) will be fetched when the
+fixture section is selected.  
 
 ## Imports
 
