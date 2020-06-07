@@ -155,7 +155,6 @@ const PanelSection = ({
 
   useEffect(() => {
     const channel = addons.getChannel();
-
     if (active) {
       channel.on(PREVIEW_KEYDOWN, handleKeyDown);
     }
@@ -165,7 +164,7 @@ const PanelSection = ({
         channel.off(PREVIEW_KEYDOWN, handleKeyDown);
       }
     };
-  }, []);
+  }, [sectionId, active]);
 
   useEffect(() => {
     // activate on tab switch
