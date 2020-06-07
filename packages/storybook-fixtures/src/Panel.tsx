@@ -5,6 +5,7 @@ import { styled } from '@storybook/theming';
 import addons from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
 import { TabsState, TabWrapper } from '@storybook/components';
+import { PREVIEW_KEYDOWN } from '@storybook/core-events';
 import { FixtureParameters } from './types';
 import { Events } from '.';
 
@@ -89,6 +90,18 @@ const FixtureButton = styled.button`
     border-color: ${({ theme }) => theme.color.secondary};
   }
 
+  .key {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    z-index: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.2rem;
+    background-color: #0002;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
   .preview {
     border-radius: 0.2rem;
     padding: 0.2rem;
@@ -125,14 +138,34 @@ const PanelSection = ({
   const [activeIdx, setActiveIdx] = useState(0);
 
   function activateVariant(idx) {
-    const [, variant] = entries[idx];
     setActiveIdx(idx);
     onSelect({
       sectionId,
-      variant,
       variantIdx: idx,
     });
   }
+
+  function handleKeyDown({ event }) {
+    const keyedIndex = event.key - 1;
+
+    if (keyedIndex >= 0 && keyedIndex < 10) {
+      activateVariant(keyedIndex);
+    }
+  }
+
+  useEffect(() => {
+    const channel = addons.getChannel();
+
+    if (active) {
+      channel.on(PREVIEW_KEYDOWN, handleKeyDown);
+    }
+
+    return () => {
+      if (active) {
+        channel.off(PREVIEW_KEYDOWN, handleKeyDown);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     // activate on tab switch
@@ -148,16 +181,23 @@ const PanelSection = ({
         <FixturesMenu>
           {entries.map(([key, value], idx) => {
             const buttonClass = [activeIdx === idx && 'active'].filter(Boolean).join(' ');
-
             const previewText = JSON.stringify(value, null, 2).trim().slice(0, 300);
+            const keyNumber = idx + 1;
+
             return (
               <FixtureButton
                 key={key}
                 type="button"
                 className={buttonClass}
+                title={
+                  keyNumber < 10
+                    ? `Press the ${keyNumber} key to select the variant (when focused in Preview)`
+                    : undefined
+                }
                 data-id={key}
                 onClick={() => activateVariant(idx)}
               >
+                {keyNumber < 10 && <span className="key">{keyNumber}</span>}
                 <span className="preview">{previewText}</span>
                 <span className="name">{key}</span>
               </FixtureButton>
