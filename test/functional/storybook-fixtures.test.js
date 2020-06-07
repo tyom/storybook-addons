@@ -91,12 +91,10 @@ for (const { urlPath, fixtureName } of useCases) {
 
     await page.assertTextInPreview(titleSelector, 'Tiger');
 
-    await t.click('#storybook-preview-iframe');
     await t.pressKey('2');
     await page.assertTextInPreview(titleSelector, 'Lion');
     await t.pressKey('3');
     await page.assertTextInPreview(titleSelector, 'Jaguar');
-    await t.click('#storybook-preview-wrapper');
     await t.pressKey('4');
     await page.assertTextInPreview(titleSelector, 'Leopard');
     await t.pressKey('5');

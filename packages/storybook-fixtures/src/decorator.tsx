@@ -18,7 +18,7 @@ function getVariant(fixtures = {}, sectionId, idx = 0) {
   }
   const [firstFixtureKey] = entries[0];
   const variants = Object.entries(fixtures[sectionId || firstFixtureKey]);
-  const [, variant] = variants[idx];
+  const [, variant] = variants[idx] || [];
 
   return typeof variant !== 'string' ? variant : {};
 }

@@ -1,3 +1,4 @@
+/* global document */
 import isPlainObject from 'lodash/isPlainObject';
 import React, { useEffect, useState } from 'react';
 import fetch from 'cross-fetch';
@@ -145,10 +146,14 @@ const PanelSection = ({
     });
   }
 
-  function handleKeyDown({ event }) {
-    const keyedIndex = event.key - 1;
+  function handlePreviewKeyDown({ event }) {
+    handleKeyDown(event);
+  }
 
-    if (keyedIndex >= 0 && keyedIndex < 10) {
+  function handleKeyDown({ key }) {
+    const keyedIndex = key - 1;
+
+    if (keyedIndex >= 0 && keyedIndex < entries.length && keyedIndex < 10) {
       activateVariant(keyedIndex);
     }
   }
@@ -156,12 +161,14 @@ const PanelSection = ({
   useEffect(() => {
     const channel = addons.getChannel();
     if (active) {
-      channel.on(PREVIEW_KEYDOWN, handleKeyDown);
+      channel.on(PREVIEW_KEYDOWN, handlePreviewKeyDown);
+      document.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
       if (active) {
-        channel.off(PREVIEW_KEYDOWN, handleKeyDown);
+        channel.off(PREVIEW_KEYDOWN, handlePreviewKeyDown);
+        document.removeEventListener('keydown', handleKeyDown);
       }
     };
   }, [sectionId, active]);
