@@ -15,7 +15,12 @@ const useCases = [
 const titleSelector = '[data-id="title"]';
 
 for (const { urlPath, fixtureName } of useCases) {
-  fixture(fixtureName).page(BASE_URL + urlPath);
+  fixture
+    .meta(
+      'target',
+      fixtureName.toLowerCase()
+    )(fixtureName)
+    .page(BASE_URL + urlPath);
 
   test('Collection fixture', async () => {
     await page.selectSidebarItem('Collection Fixture');
