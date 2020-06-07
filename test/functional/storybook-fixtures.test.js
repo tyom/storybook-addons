@@ -32,7 +32,6 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Jaguar');
     await page.selectVariant('Variant 5');
     await page.assertTextInPreview(titleSelector, 'Snow leopard');
-
   });
 
   test('Object fixture', async () => {
@@ -86,6 +85,24 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Lion');
   });
 
+  test('Keyboard shortcuts', async t => {
+    await page.selectSidebarItem('Object Fixture');
+    await page.selectPanel('Fixtures');
+
+    await page.assertTextInPreview(titleSelector, 'Tiger');
+
+    await t.click('#storybook-preview-iframe');
+    await t.pressKey('2');
+    await page.assertTextInPreview(titleSelector, 'Lion');
+    await t.pressKey('3');
+    await page.assertTextInPreview(titleSelector, 'Jaguar');
+    await t.click('#storybook-preview-wrapper');
+    await t.pressKey('4');
+    await page.assertTextInPreview(titleSelector, 'Leopard');
+    await t.pressKey('5');
+    await page.assertTextInPreview(titleSelector, 'Snow leopard');
+  });
+
   test('Open selection in new tab on its own', async (t) => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
@@ -106,7 +123,6 @@ for (const { urlPath, fixtureName } of useCases) {
 
     await t.expect(page.panelTabs.find('button').withText('Fixtures').exists).ok();
     await t.expect(page.fixtureTabs.find('button').exists).notOk();
-
   });
 
   test('Disabled fixtures panel', async (t) => {
