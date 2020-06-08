@@ -27,7 +27,7 @@ keyboard shortcuts - keys `1` to `9` correspond to the first 9 variants.
 Variants can also be switched in sequentially using Vim-style navigation keys:
 `j` and `k` to go up and down the variant list. 
 
-Section tabs can be switched using `h` and `r` to switch to left and right
+Section tabs can be switched using `h` and `l` to switch to left and right
 tab respectively.
 
 ## Usage

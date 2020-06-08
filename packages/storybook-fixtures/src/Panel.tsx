@@ -83,7 +83,7 @@ const PanelSection = ({
     let keyedIndex = key - 1;
     // Vim navigation: up/down to switch variants
     if (['k', 'j'].includes(key)) {
-      keyedIndex = key === 'j' ? activeIdx + 1 : activeIdx - 1;
+      keyedIndex = key === 'k' ? activeIdx + 1 : activeIdx - 1;
     }
 
     if (keyedIndex >= 0 && keyedIndex < entries.length && keyedIndex < 10) {
