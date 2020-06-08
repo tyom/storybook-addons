@@ -16,13 +16,19 @@ npm install -D storybook-fixtures
 Add `storybook-fixtures` to your addons list in `.storybook/main.js`
 ```js
 module.exports = {
-  addons: ['storybook-fixtures'],
+  addons: ['storybook-fixtures']
 };
 ```
 
 A new 'Fixtures' panel will appear which contains fixture sections as sub tabs.
 Fixture sections contain fixture variants which can be toggled by clicking or
 keyboard shortcuts - keys `1` to `9` correspond to the first 9 variants. 
+
+Variants can also be switched in sequentially using Vim-style navigation keys:
+`j` and `k` to go up and down the variant list. 
+
+Section tabs can be switched using `h` and `r` to switch to left and right
+tab respectively.
 
 ## Usage
 
@@ -58,9 +64,15 @@ export const myRemoteFixture = ({ fixture }) => {
 myRemoteFixture.story = {
   parameters: {
     fixtures: {
-      // fixture sections
-      remoteFixtures: {
-        // variants
+      // fixture sections (key is label)
+      variantTypes: {
+        // variants (key is label)
+        'Text fixture': 'Lorem ipsum',
+        'Array fixture': ['One', 'Two'],
+        'Object fixture': {
+          title: 'Tiger',
+          description: 'Largest species of the cat family',
+        },
         'My remote fixture': 'https://example.com/data.json'
       }
     }  
@@ -68,9 +80,8 @@ myRemoteFixture.story = {
 }
 ``` 
 
-Each variant can be either contain the data, or a URL to fetch the data. The data
-for all URLs (a variant string value is assumed as URL) will be fetched when the
-fixture section is selected.  
+Each variant value can be be a URL, in which case it'll be fetched and
+the result returned as its value.
 
 ## Imports
 
