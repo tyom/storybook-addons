@@ -1,0 +1,57 @@
+{
+  "type": "standard",
+  "title": "Clouded leopard",
+  "displaytitle": "Clouded leopard",
+  "namespace": {
+    "id": 0,
+    "text": ""
+  },
+  "wikibase_item": "Q36135",
+  "titles": {
+    "canonical": "Clouded_leopard",
+    "normalized": "Clouded leopard",
+    "display": "Clouded leopard"
+  },
+  "pageid": 45798,
+  "thumbnail": {
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/CloudedLeopard.jpg/320px-CloudedLeopard.jpg",
+    "width": 320,
+    "height": 213
+  },
+  "originalimage": {
+    "source": "https://upload.wikimedia.org/wikipedia/commons/2/2d/CloudedLeopard.jpg",
+    "width": 4272,
+    "height": 2848
+  },
+  "lang": "en",
+  "dir": "ltr",
+  "revision": "954256452",
+  "tid": "e8ada1d0-a317-11ea-8c06-b149eca8f235",
+  "timestamp": "2020-05-01T13:32:15Z",
+  "description": "species of mammal found from the Himalayan foothills through mainland Southeast Asia into China",
+  "description_source": "central",
+  "content_urls": {
+    "desktop": {
+      "page": "https://en.wikipedia.org/wiki/Clouded_leopard",
+      "revisions": "https://en.wikipedia.org/wiki/Clouded_leopard?action=history",
+      "edit": "https://en.wikipedia.org/wiki/Clouded_leopard?action=edit",
+      "talk": "https://en.wikipedia.org/wiki/Talk:Clouded_leopard"
+    },
+    "mobile": {
+      "page": "https://en.m.wikipedia.org/wiki/Clouded_leopard",
+      "revisions": "https://en.m.wikipedia.org/wiki/Special:History/Clouded_leopard",
+      "edit": "https://en.m.wikipedia.org/wiki/Clouded_leopard?action=edit",
+      "talk": "https://en.m.wikipedia.org/wiki/Talk:Clouded_leopard"
+    }
+  },
+  "api_urls": {
+    "summary": "https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard",
+    "metadata": "https://en.wikipedia.org/api/rest_v1/page/metadata/Clouded_leopard",
+    "references": "https://en.wikipedia.org/api/rest_v1/page/references/Clouded_leopard",
+    "media": "https://en.wikipedia.org/api/rest_v1/page/media/Clouded_leopard",
+    "edit_html": "https://en.wikipedia.org/api/rest_v1/page/html/Clouded_leopard",
+    "talk_page_html": "https://en.wikipedia.org/api/rest_v1/page/html/Talk:Clouded_leopard"
+  },
+  "extract": "The clouded leopard is a medium-size wild cat occurring from the Himalayan foothills through mainland Southeast Asia into southern China. Since 2008, it is listed as Vulnerable on the IUCN Red List. Its total population is suspected to be fewer than 10,000 mature individuals, with a decreasing population trend, and no single population numbering more than 1,000 adults.",
+  "extract_html": "<p>The <b>clouded leopard</b> is a medium-size wild cat occurring from the Himalayan foothills through mainland Southeast Asia into southern China. Since 2008, it is listed as Vulnerable on the IUCN Red List. Its total population is suspected to be fewer than 10,000 mature individuals, with a decreasing population trend, and no single population numbering more than 1,000 adults.</p>"
+}
