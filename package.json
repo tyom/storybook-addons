@@ -19,7 +19,7 @@
     "examples": "yarn examples:build && yarn examples:serve",
     "examples:build": "lerna run build-storybook",
     "examples:serve": "http-server examples/build -p 5000",
-    "prepare": "yarn build"
+    "prepare": "yarn build && yarn test"
   },
   "devDependencies": {
     "@babel/core": "^7.10.1",
