@@ -9,12 +9,12 @@
   "scripts": {
     "build": "lerna run build",
     "watch": "lerna run watch --parallel",
-    "test": "yarn examples:build && yarn test:lint && yarn test:unit && yarn test:func",
-    "test:lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs .",
+    "test": "yarn examples:build && yarn lint && yarn test:unit && yarn test:func",
     "test:unit": "jest",
     "test:func": "testcafe test/functional/*.test.js",
     "test:func:react": "yarn test:func --fixture-meta target=react",
     "test:func:vue": "yarn test:func --fixture-meta target=vue",
+    "lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs .",
     "storybooks": "lerna run storybook --parallel",
     "examples": "yarn examples:build && yarn examples:serve",
     "examples:build": "lerna run build-storybook",
@@ -52,7 +52,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "yarn test:lint --fix",
+      "yarn lint --fix",
       "git add"
     ]
   }
