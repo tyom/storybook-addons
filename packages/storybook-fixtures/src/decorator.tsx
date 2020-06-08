@@ -20,7 +20,7 @@ function getVariant(fixtures = {}, sectionId, idx = 0) {
   const variants = Object.entries(fixtures[sectionId || firstFixtureKey]);
   const [, variant] = variants[idx] || [];
 
-  return typeof variant !== 'string' ? variant : {};
+  return variant;
 }
 
 export const withFixtures = makeDecorator({

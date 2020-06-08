@@ -87,6 +87,27 @@ remoteFixture.story = {
   ],
 };
 
+export const stringValueFixture = ({ fixture }) => ({
+  template: `<h1 class="font-sans text-white">{{ fixture }}</h1>`,
+  props: {
+    fixture: {
+      default: fixture,
+    },
+  },
+});
+stringValueFixture.story = {
+  decorators: [
+    withFixtures({
+      Values: {
+        Tiger: 'Largest species of the cat family',
+        Lion: 'A large cat native to Africa and Asia',
+        Jaguar: 'A large cat native to Americas',
+        Leopard: 'A large cat native to Africa and Eurasia',
+      },
+    }),
+  ],
+};
+
 export const noFixture = () => ({
   ...Card,
   props: {

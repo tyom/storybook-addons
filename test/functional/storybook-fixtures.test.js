@@ -67,6 +67,15 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Sunda clouded leopard');
   });
 
+  test('String value fixtures', async () => {
+    await page.selectSidebarItem('String Value Fixture');
+    await page.selectPanel('Fixtures');
+    // Ensure first variant is selected by default
+    await page.assertTextInPreview('h1.font-sans', 'Largest species of the cat family');
+    await page.selectVariant('Jaguar');
+    await page.assertTextInPreview('h1.font-sans', 'A large cat native to Americas');
+  });
+
   test('Remember selections between fixtures', async () => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
@@ -85,7 +94,25 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Lion');
   });
 
-  test('Keyboard shortcuts', async t => {
+  test('Keyboard shortcuts: section tabs', async t => {
+    await page.selectSidebarItem('Object Fixture');
+    await page.selectPanel('Fixtures');
+
+    await page.assertTextInPreview(titleSelector, 'Tiger');
+
+    await t.pressKey('3'); // select variant
+    await page.assertTextInPreview(titleSelector, 'Jaguar');
+    await t.pressKey('l'); // go to next section tab
+    await page.assertTextInPreview(titleSelector, 'Tiger');
+    await t.pressKey('4'); // select variant
+    await page.assertTextInPreview(titleSelector, 'Leopard');
+    await t.pressKey('h'); // go to previous section tab
+    await page.assertTextInPreview(titleSelector, 'Jaguar');
+    await t.pressKey('l'); // go to next section tab check the selected state
+    await page.assertTextInPreview(titleSelector, 'Leopard');
+  });
+
+  test('Keyboard shortcuts: variants', async t => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
 
@@ -95,10 +122,15 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Lion');
     await t.pressKey('3');
     await page.assertTextInPreview(titleSelector, 'Jaguar');
-    await t.pressKey('4');
+    // down
+    await t.pressKey('j');
     await page.assertTextInPreview(titleSelector, 'Leopard');
-    await t.pressKey('5');
+    // down
+    await t.pressKey('j');
     await page.assertTextInPreview(titleSelector, 'Snow leopard');
+    // up
+    await t.pressKey('k');
+    await page.assertTextInPreview(titleSelector, 'Leopard');
   });
 
   test('Open selection in new tab on its own', async (t) => {
