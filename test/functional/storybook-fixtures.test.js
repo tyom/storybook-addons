@@ -123,13 +123,13 @@ for (const { urlPath, fixtureName } of useCases) {
     await t.pressKey('3');
     await page.assertTextInPreview(titleSelector, 'Jaguar');
     // down
-    await t.pressKey('j');
+    await t.pressKey('k');
     await page.assertTextInPreview(titleSelector, 'Leopard');
     // down
-    await t.pressKey('j');
+    await t.pressKey('k');
     await page.assertTextInPreview(titleSelector, 'Snow leopard');
     // up
-    await t.pressKey('k');
+    await t.pressKey('j');
     await page.assertTextInPreview(titleSelector, 'Leopard');
   });
 
