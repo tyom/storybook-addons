@@ -7,10 +7,18 @@ import addons from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
 import { Tabs, TabWrapper } from '@storybook/components';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
-import { FixtureParameters } from './types';
+import { FixtureParameters, KeyboardEvent, PreviewKeyDownEvent } from './types';
 import { Events } from '.';
 
 type FixtureData = {};
+
+interface PanelSectionProps {
+  active: boolean;
+  fixtureContents: {};
+  sectionId: string;
+  selectedSectionId: string;
+  onSelect: ({ sectionId: string, variantIdx: number }) => void;
+}
 
 export function getEntries(obj = {}) {
   if (Array.isArray(obj)) {
@@ -63,11 +71,11 @@ const PanelSection = ({
   sectionId,
   selectedSectionId,
   onSelect,
-}) => {
+}: PanelSectionProps) => {
   const entries = getEntries(fixtureContents);
   const [activeIdx, setActiveIdx] = useState(0);
 
-  function activateVariant(idx) {
+  function activateVariant(idx: number) {
     setActiveIdx(idx);
     onSelect({
       sectionId,
@@ -75,12 +83,12 @@ const PanelSection = ({
     });
   }
 
-  function handlePreviewKeyDown({ event }) {
+  function handlePreviewKeyDown({ event }: PreviewKeyDownEvent) {
     handleKeyDown(event);
   }
 
-  function handleKeyDown({ key }) {
-    let keyedIndex = key - 1;
+  function handleKeyDown({ key }: KeyboardEvent) {
+    let keyedIndex = Number(key) - 1;
     // Vim navigation: up/down to switch variants
     if (['k', 'j'].includes(key)) {
       keyedIndex = key === 'k' ? activeIdx + 1 : activeIdx - 1;
@@ -174,16 +182,16 @@ export default function Panel() {
     });
   }
 
-  function handleSectionSelect(id) {
+  function handleSectionSelect(id: string) {
     const idx = fixtureSections.findIndex((s) => s === id);
     setSelectedSectionIdx(idx);
   }
 
-  function handlePreviewKeyDown({ event }) {
+  function handlePreviewKeyDown({ event }: PreviewKeyDownEvent) {
     handleKeyDown(event);
   }
 
-  function handleKeyDown({ key }) {
+  function handleKeyDown({ key }: KeyboardEvent) {
     // Vim navigation: left/right to switch section tabs
     // Switch to right
     if (key === 'l' && selectedSectionIdx < fixtureSections.length - 1) {
