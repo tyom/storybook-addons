@@ -11,6 +11,10 @@ const useCases = [
     urlPath: '/vue',
     fixtureName: 'Vue',
   },
+  {
+    urlPath: '/html',
+    fixtureName: 'HTML',
+  },
 ];
 const titleSelector = '[data-id="title"]';
 

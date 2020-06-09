@@ -6,6 +6,7 @@
 ## Examples
 - [**React Storybook**](https://tyom.github.io/storybook-addons/react/)
 - [**Vue Storybook**](https://tyom.github.io/storybook-addons/vue/)
+- [**HTML Storybook**](https://tyom.github.io/storybook-addons/html/)
 
 ## Add-ons
 
