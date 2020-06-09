@@ -7,7 +7,6 @@
     "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/react"
   },
   "dependencies": {
-    "@blueprintjs/core": "3.28.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "storybook-fixtures": "^0.4.9",
