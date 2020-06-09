@@ -88,7 +88,7 @@ remoteFixture.story = {
 };
 
 export const stringValueFixture = ({ fixture }) => ({
-  template: `<h1 class="font-sans text-white">{{ fixture }}</h1>`,
+  template: `<h1 class="font-sans">{{ fixture }}</h1>`,
   props: {
     fixture: {
       default: fixture,
