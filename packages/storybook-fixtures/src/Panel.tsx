@@ -49,6 +49,7 @@ export async function fetchRemotes(
         try {
           result[key][variantKey] = await fetch(vVal).then((r) => {
             if (!r.ok) {
+              // eslint-disable-next-line no-console
               console.error(`Failed to fetch ${vVal}`);
             }
             return r.json();
@@ -169,6 +170,7 @@ export default function Panel() {
       const resolvedFixtures = await fetchRemotes(storyOptions);
       setFixtures(resolvedFixtures);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Some requests have failed.', err);
     }
   }
