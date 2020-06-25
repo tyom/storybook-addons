@@ -1,5 +1,6 @@
 /* global window */
 import qs from 'qs';
+import isNil from 'lodash/isNil';
 import { FORCE_RE_RENDER } from '@storybook/core-events';
 import { useEffect } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
@@ -76,7 +77,7 @@ export const withFixtures = makeDecorator({
 
     return storyFn({
       ...context,
-      fixture: selectedVariant || initialVariant,
+      fixture: !isNil(selectedVariant) ? selectedVariant : initialVariant,
     });
   },
 });
