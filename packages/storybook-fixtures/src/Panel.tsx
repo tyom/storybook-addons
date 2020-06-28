@@ -179,6 +179,7 @@ export default function Panel() {
   const channel = addons.getChannel();
   const [fixtures, setFixtures] = useState<FixtureData>({});
   const [fixtureSettings, setFixtureSettings] = useState<FixtureSettings>({});
+  const [fixtureSelection, setFixtureSelection] = useState([]);
   const fixtureSections = Object.keys(fixtures);
   const [selectedSectionIdx, setSelectedSectionIdx] = useState(0);
   const entries = getEntries(fixtures);
@@ -189,6 +190,7 @@ export default function Panel() {
       const resolvedFixtures = await fetchRemotes(storyOptions);
       setFixtures(resolvedFixtures);
       setFixtureSettings(settings);
+      setFixtureSelection([]);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Some requests have failed.', err);
@@ -198,9 +200,13 @@ export default function Panel() {
   function handleFixtureSelect({ sectionId, variantIdx }) {
     channel.emit(Events.CHANGE, { fixtures, sectionId, variantIdx });
 
+    const sectionIdx = Object.keys(fixtures).findIndex((x) => x === sectionId);
+    const newSelection = [...fixtureSelection];
+    newSelection[sectionIdx] = variantIdx;
+    setFixtureSelection(newSelection);
+
     api.setQueryParams({
-      fixture: sectionId,
-      variant: variantIdx,
+      fixtures: `${newSelection.join(',')}:${sectionIdx}`,
     });
   }
 

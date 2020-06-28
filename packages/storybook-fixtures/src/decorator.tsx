@@ -1,6 +1,5 @@
 /* global window */
 import qs from 'qs';
-import isNil from 'lodash/isNil';
 import { FORCE_RE_RENDER } from '@storybook/core-events';
 import { useEffect } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
@@ -12,7 +11,8 @@ import { PreviewQuery, Variant } from './types';
 // Avoid relying on module level variable.
 // A better way would be to use hooks but Storybook's own cross-framework useState,
 // unlike useEffect is not in v5. It's supposed to be in v6 though
-let selectedVariant: Variant | null;
+let selectedVariants = {};
+let activeVariant: Variant | undefined;
 
 function getVariant(fixtures = {}, sectionId: string, idx = 0): Variant {
   const entries = Object.entries(fixtures);
@@ -28,6 +28,23 @@ function getVariant(fixtures = {}, sectionId: string, idx = 0): Variant {
   return variant;
 }
 
+function getVariantsFromQuery(fixtures, variantsQuery = '') {
+  const [variantsString, activeSectionIdx = 0] = variantsQuery.split(':');
+  const fixtureVariants = variantsString.split(',').map(Number);
+  const entries = Object.entries(fixtures);
+  const variantsFromQuery = entries.reduce((acc, [sectionKey, sectionValue], idx) => {
+    const variantEntries = Object.entries(sectionValue);
+    const variantIdx = fixtureVariants[idx] || 0;
+    const [, variant] = variantEntries[Number(variantIdx)];
+    return {
+      ...acc,
+      [sectionKey]: variant,
+    };
+  }, {});
+
+  return [variantsFromQuery, Object.values(variantsFromQuery)[activeSectionIdx]];
+}
+
 export const withFixtures = makeDecorator({
   name: ADDON_ID,
   parameterName: PARAM_KEY,
@@ -36,14 +53,17 @@ export const withFixtures = makeDecorator({
     context,
     { options = {}, parameters = {} }
   ) => {
+    const channel = addons.getChannel();
+    const query: PreviewQuery = qs.parse(window.location.search);
+    const fixtureEntries = Object.entries({
+      ...options,
+      ...parameters,
+    });
     const fixtureSettings = {
       singleTab: false,
     };
-    const query: PreviewQuery = qs.parse(window.location.search);
-    const storyOptions = Object.entries({
-      ...options,
-      ...parameters,
-    }).reduceRight((acc, [k, v]) => {
+    // extract special settings properties
+    const fixturesObject = fixtureEntries.reduceRight((acc, [k, v]) => {
       if (k.startsWith('__')) {
         fixtureSettings[k.replace('__', '')] = v;
         return acc;
@@ -54,42 +74,53 @@ export const withFixtures = makeDecorator({
       };
     }, {});
 
-    const channel = addons.getChannel();
-    const fixtureKeys: string[] = Object.keys(storyOptions);
+    const fixtureKeys: string[] = Object.keys(fixturesObject);
     if (!fixtureKeys.length) {
-      selectedVariant = {};
+      selectedVariants = {};
+      activeVariant = undefined;
     }
 
-    // Initialise to static fixture (in manager)
-    const initialVariant = getVariant(storyOptions, query.fixture, query.variant);
-
     function handleFixtureChange({ fixtures, sectionId, variantIdx }) {
-      selectedVariant = getVariant(fixtures, sectionId, variantIdx);
+      selectedVariants[sectionId] = getVariant(fixtures, sectionId, variantIdx);
+      activeVariant = selectedVariants[sectionId];
       channel.emit(FORCE_RE_RENDER);
     }
 
     useEffect(() => {
-      channel.emit(Events.INIT, storyOptions, fixtureSettings);
+      channel.emit(Events.INIT, fixturesObject, fixtureSettings);
       channel.on(Events.CHANGE, handleFixtureChange);
 
+      // Initialise from query
+      [selectedVariants, activeVariant] = getVariantsFromQuery(
+        fixturesObject,
+        query.fixtures
+      );
+
       // Fetch remote data and rerender in stand-alone preview iframe
-      if (query.fixture && query.variant) {
-        fetchRemotes(storyOptions).then((resolvedFixtures) => {
-          selectedVariant = getVariant(resolvedFixtures, query.fixture, query.variant);
+      if (query.fixtures) {
+        fetchRemotes(fixturesObject).then((resolvedFixtures) => {
+          [selectedVariants, activeVariant] = getVariantsFromQuery(
+            resolvedFixtures,
+            query.fixtures
+          );
           channel.emit(FORCE_RE_RENDER);
         });
       }
 
       return () => {
         channel.off(Events.CHANGE, handleFixtureChange);
-        selectedVariant = null;
+        selectedVariants = {};
+        activeVariant = undefined;
         channel.emit(Events.INIT, {});
       };
     }, []);
 
+    const fixtures = Object.values(selectedVariants);
+
     return storyFn({
       ...context,
-      fixture: !isNil(selectedVariant) ? selectedVariant : initialVariant,
+      fixtures,
+      fixture: activeVariant,
     });
   },
 });

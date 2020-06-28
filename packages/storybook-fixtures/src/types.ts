@@ -11,6 +11,7 @@ export type Variant = {} | string;
 export type PreviewQuery = {
   fixture: string;
   variant: number;
+  fixtures: string;
 };
 
 export type KeyboardEvent = {

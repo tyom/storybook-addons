@@ -10,27 +10,48 @@ export default {
 };
 
 // Styling with Tailwind CSS https://tailwindcss.com
-const Card = ({ title, thumbnail, extract_html }) => (
-  <div className="font-sans text-gray-800 max-w-sm rounded overflow-hidden shadow-lg bg-white">
-    {thumbnail && (
-      <div
-        className="bg-cover h-64"
-        style={{ backgroundImage: `url('${thumbnail.source}')` }}
-      />
-    )}
-    <div className="px-6 py-4">
-      <h2 data-id="title" className="font-bold text-2xl mb-2 mt-0">
-        {title}
-      </h2>
-      {/* eslint-disable-next-line react/no-danger */}
-      <div
-        className="text-gray-700 text-base"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: extract_html }}
-      />
+const Card = ({ title, thumbnail, extract_html, textColor = '' }) => {
+  const color = textColor ? `text-${textColor}` : 'gray-800';
+  return (
+    <div
+      className={`font-sans ${color} max-w-sm rounded overflow-hidden shadow-lg bg-white`}
+    >
+      {thumbnail && (
+        <div
+          className="bg-cover h-64"
+          style={{ backgroundImage: `url('${thumbnail.source}')` }}
+        />
+      )}
+      <div className="px-6 py-4">
+        <h2 data-id="title" className="font-bold text-2xl mb-2 mt-0">
+          {title}
+        </h2>
+        {/* eslint-disable-next-line react/no-danger */}
+        <div
+          className="text-gray-700 text-base"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: extract_html }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+export const multipleFixtures = ({ fixtures: [genus, textColor] }) => {
+  return <Card {...genus} textColor={textColor} />;
+};
+multipleFixtures.story = {
+  decorators: [
+    withFixtures({
+      'Panthera Genus': pantheraData,
+      colors: {
+        Red: 'red-600',
+        Green: 'green-700',
+        Blue: 'blue-600',
+      },
+    }),
+  ],
+};
 
 export const collectionFixtureNoTab = ({ fixture }) => <Card {...fixture} />;
 collectionFixtureNoTab.story = {
