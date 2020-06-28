@@ -14,6 +14,7 @@
     "test:func": "testcafe test/functional/*.test.js",
     "test:func:react": "yarn test:func --fixture-meta target=react",
     "test:func:vue": "yarn test:func --fixture-meta target=vue",
+    "test:func:html": "yarn test:func --fixture-meta target=html",
     "lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs .",
     "storybooks": "lerna run storybook --parallel",
     "examples": "yarn examples:build && yarn examples:serve",
