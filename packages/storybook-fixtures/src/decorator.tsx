@@ -36,11 +36,23 @@ export const withFixtures = makeDecorator({
     context,
     { options = {}, parameters = {} }
   ) => {
+    const fixtureSettings = {
+      singleTab: false,
+    };
     const query: PreviewQuery = qs.parse(window.location.search);
-    const storyOptions = {
+    const storyOptions = Object.entries({
       ...options,
       ...parameters,
-    };
+    }).reduceRight((acc, [k, v]) => {
+      if (k.startsWith('__')) {
+        fixtureSettings[k.replace('__', '')] = v;
+        return acc;
+      }
+      return {
+        [k]: v,
+        ...acc,
+      };
+    }, {});
 
     const channel = addons.getChannel();
     const fixtureKeys: string[] = Object.keys(storyOptions);
@@ -57,7 +69,7 @@ export const withFixtures = makeDecorator({
     }
 
     useEffect(() => {
-      channel.emit(Events.INIT, storyOptions);
+      channel.emit(Events.INIT, storyOptions, fixtureSettings);
       channel.on(Events.CHANGE, handleFixtureChange);
 
       // Fetch remote data and rerender in stand-alone preview iframe

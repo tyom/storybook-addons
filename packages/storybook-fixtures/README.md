@@ -45,6 +45,8 @@ export default {
   title: 'storybook-fixtures',
   decorators: [
     withFixtures({
+      // override the default setting and show single fixture tab
+      __singleTab: true,
       // fixture sections
       collection: pantheraData,
     }),
@@ -83,6 +85,15 @@ myRemoteFixture.story = {
 
 Each variant value can be be a URL, in which case it'll be fetched and
 the result returned as its value.
+
+### Fixture Settings
+
+`withFixtures` decorator has special properties prefixed with double underscore.
+These properties can change certain behaviour of how fixtures are displayed.
+
+- `__singleTab` (defaults to `false`) - Fixtures are grouped into multiple tabs. Each key
+in the fixtures object is mapped to the tab. When there's only a single property in the
+fixture object the single tab is not shown by default. 
 
 ## Imports
 

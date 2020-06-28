@@ -9,6 +9,7 @@ class Page {
     this.fixtureTabs = Selector(
       '#storybook-panel-root > div:nth-child(2) [role="tablist"]'
     );
+    this.tabbedSections = Selector('#tabbed-fixture-sections');
   }
 
   assertTextInPreview(selector, expectedText) {
@@ -44,6 +45,10 @@ class Page {
 
   openCanvasInNewTab() {
     return t.click('button[title="Open canvas in new tab"]');
+  }
+
+  async hasSections() {
+    return t.expect(Selector('#tabbed-fixture-sections').exists).eql(true);
   }
 }
 

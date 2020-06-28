@@ -33,6 +33,23 @@ export default {
   title: 'storybook-fixtures',
 };
 
+export const collectionFixtureNoTab = ({ fixture }) => ({
+  ...Card,
+  props: {
+    fixture: {
+      default: fixture,
+    },
+  },
+});
+collectionFixtureNoTab.story = {
+  name: 'fixture setting: singleTab',
+  decorators: [
+    withFixtures({
+      collection: pantheraCollection,
+    }),
+  ],
+};
+
 export const collectionFixture = ({ fixture }) => ({
   ...Card,
   props: {
@@ -44,6 +61,7 @@ export const collectionFixture = ({ fixture }) => ({
 collectionFixture.story = {
   decorators: [
     withFixtures({
+      __singleTab: true,
       collection: pantheraCollection,
     }),
   ],

@@ -12,6 +12,10 @@ import { Events } from '.';
 
 type FixtureData = {};
 
+interface FixtureSettings {
+  singleTab?: boolean;
+}
+
 interface PanelSectionProps {
   active: boolean;
   fixtureContents: {};
@@ -157,18 +161,34 @@ const PanelSection = ({
   );
 };
 
+function renderPanelSection({ id, content, active = true, onSelect }) {
+  const selectedSectionId = active ? id : '';
+  return (
+    <PanelSection
+      key={id}
+      active={active}
+      fixtureContents={content}
+      sectionId={id}
+      selectedSectionId={selectedSectionId}
+      onSelect={onSelect}
+    />
+  );
+}
+
 export default function Panel() {
   const channel = addons.getChannel();
   const [fixtures, setFixtures] = useState<FixtureData>({});
+  const [fixtureSettings, setFixtureSettings] = useState<FixtureSettings>({});
   const fixtureSections = Object.keys(fixtures);
   const [selectedSectionIdx, setSelectedSectionIdx] = useState(0);
   const entries = getEntries(fixtures);
   const api = useStorybookApi();
 
-  async function initialise(storyOptions) {
+  async function initialise(storyOptions, settings) {
     try {
       const resolvedFixtures = await fetchRemotes(storyOptions);
       setFixtures(resolvedFixtures);
+      setFixtureSettings(settings);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Some requests have failed.', err);
@@ -228,8 +248,19 @@ export default function Panel() {
     return null;
   }
 
+  if (entries.length === 1 && !fixtureSettings?.singleTab) {
+    const [[key, value]] = entries;
+    return renderPanelSection({
+      id: key,
+      content: value,
+      active: true,
+      onSelect: handleFixtureSelect,
+    });
+  }
+
   return (
     <Tabs
+      id="tabbed-fixture-sections"
       absolute
       bordered
       actions={{ onSelect: handleSectionSelect }}
@@ -237,19 +268,14 @@ export default function Panel() {
     >
       {entries.map(([k, v]) => (
         <div id={k} title={k} key={k}>
-          {({ active }: { active: boolean }) => {
-            const selectedId = active ? k : '';
-            return (
-              <PanelSection
-                key={k}
-                active={active}
-                fixtureContents={v}
-                sectionId={k}
-                selectedSectionId={selectedId}
-                onSelect={handleFixtureSelect}
-              />
-            );
-          }}
+          {({ active }: { active: boolean }) =>
+            renderPanelSection({
+              id: k,
+              content: v,
+              active,
+              onSelect: handleFixtureSelect,
+            })
+          }
         </div>
       ))}
     </Tabs>

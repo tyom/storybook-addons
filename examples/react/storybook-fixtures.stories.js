@@ -32,10 +32,21 @@ const Card = ({ title, thumbnail, extract_html }) => (
   </div>
 );
 
+export const collectionFixtureNoTab = ({ fixture }) => <Card {...fixture} />;
+collectionFixtureNoTab.story = {
+  name: 'fixture setting: singleTab',
+  decorators: [
+    withFixtures({
+      collection: pantheraCollection,
+    }),
+  ],
+};
+
 export const collectionFixture = ({ fixture }) => <Card {...fixture} />;
 collectionFixture.story = {
   decorators: [
     withFixtures({
+      __singleTab: true,
       collection: pantheraCollection,
     }),
   ],

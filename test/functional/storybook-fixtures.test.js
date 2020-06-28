@@ -26,6 +26,15 @@ for (const { urlPath, fixtureName } of useCases) {
     )(fixtureName)
     .page(BASE_URL + urlPath);
 
+  test('Fixture setting: singleTab', async t => {
+    await page.selectSidebarItem('fixture setting: singleTab');
+    await page.selectPanel('Fixtures');
+    await t.expect(page.fixtureTabs.exists).eql(false);
+
+    await page.selectSidebarItem('Collection Fixture');
+    await t.expect(page.fixtureTabs.exists).eql(true);
+  });
+
   test('Collection fixture', async () => {
     await page.selectSidebarItem('Collection Fixture');
     await page.selectPanel('Fixtures');

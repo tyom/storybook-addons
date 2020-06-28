@@ -31,10 +31,21 @@ export default {
   title: 'storybook-fixtures',
 };
 
+export const collectionFixtureNoTab = ({ fixture }) => renderTemplate(fixture);
+collectionFixtureNoTab.story = {
+  name: 'fixture setting: singleTab',
+  decorators: [
+    withFixtures({
+      collection: pantheraCollection,
+    }),
+  ],
+};
+
 export const collectionFixture = ({ fixture }) => renderTemplate(fixture);
 collectionFixture.story = {
   decorators: [
     withFixtures({
+      __singleTab: true,
       collection: pantheraCollection,
     }),
   ],
