@@ -1,13 +1,13 @@
 {
   "name": "vue-example",
   "private": true,
-  "version": "0.4.10",
+  "version": "0.5.0",
   "scripts": {
     "storybook": "start-storybook -p 6009 --ci -s ../__fixtures__",
     "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/vue"
   },
   "dependencies": {
-    "storybook-fixtures": "^0.4.10",
+    "storybook-fixtures": "^0.5.0",
     "tailwindcss": "^1.4.6",
     "vue": "^2.6.11"
   },
