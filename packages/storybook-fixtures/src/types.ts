@@ -16,6 +16,8 @@ export type PreviewQuery = {
 
 export type KeyboardEvent = {
   key: string;
+  altKey: boolean;
+  keyCode: number;
 };
 
 export type PreviewKeyDownEvent = {

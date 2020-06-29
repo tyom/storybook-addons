@@ -5,12 +5,14 @@ import addons from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
 import { Tabs } from '@storybook/components';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
+import { styled } from '@storybook/theming';
 import { fetchRemotes } from '../remotes';
 import { renderPanelSection } from './PanelSection';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
 import { Events } from '..';
 
 type FixtureData = {};
+type FixtureSelection = number[];
 
 interface IFixtureSettings {
   singleTab?: boolean;
@@ -30,9 +32,9 @@ export default function Panel() {
   const channel = addons.getChannel();
   const [fixtures, setFixtures] = useState<FixtureData>({});
   const [fixtureSettings, setFixtureSettings] = useState<IFixtureSettings>({});
-  const [fixtureSelection, setFixtureSelection] = useState<number[]>([]);
+  const [fixtureSelection, setFixtureSelection] = useState<FixtureSelection>([]);
+  const [selectedSectionIdx, setSelectedSectionIdx] = useState<number>(0);
   const fixtureSections = Object.keys(fixtures);
-  const [selectedSectionIdx, setSelectedSectionIdx] = useState(0);
   const entries = getEntries(fixtures);
   const api = useStorybookApi();
 
@@ -48,7 +50,7 @@ export default function Panel() {
     }
   }
 
-  function handleFixtureSelect({ sectionId, variantIdx }) {
+  function handleFixtureSelect({ sectionId, variantIdx }): void {
     channel.emit(Events.CHANGE, { fixtures, sectionId, variantIdx });
 
     const sectionIdx = Object.keys(fixtures).findIndex((x) => x === sectionId);
@@ -70,7 +72,12 @@ export default function Panel() {
     handleKeyDown(event);
   }
 
-  function handleKeyDown({ key }: KeyboardEvent) {
+  function handleKeyDown({ key, altKey, keyCode }: KeyboardEvent) {
+    // Keys 1-9 with Alt pressed
+    if (altKey && keyCode >= 49 && keyCode <= 57) {
+      // 0-based index of tab
+      setSelectedSectionIdx(-49 + keyCode);
+    }
     // Vim navigation: left/right to switch section tabs
     // Switch to right
     if (key === 'l' && selectedSectionIdx < fixtureSections.length - 1) {
@@ -123,8 +130,20 @@ export default function Panel() {
       actions={{ onSelect: handleSectionSelect }}
       selected={fixtureSections[selectedSectionIdx]}
     >
-      {entries.map(([k, v]) => (
-        <div id={k} title={k} key={k}>
+      {entries.map(([k, v], idx) => (
+        <div
+          id={k}
+          // @ts-ignore (title as render function. <div> is a placeholder here. The props are used to populate custom elements within Tabs)
+          title={() => (
+            <StyledTabButtonContent>
+              <span className="tab-label">{k}</span>
+              {entries.length > 1 && idx < 9 && (
+                <span className="tab-label-key">alt+{idx + 1}</span>
+              )}
+            </StyledTabButtonContent>
+          )}
+          key={k}
+        >
           {({ active }: { active: boolean }) =>
             renderPanelSection({
               id: k,
@@ -138,3 +157,15 @@ export default function Panel() {
     </Tabs>
   );
 }
+
+const StyledTabButtonContent = styled.span`
+  .tab-label-key {
+    display: inline-block;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    background-color: #0002;
+    font-size: 9px;
+    padding: 0.2rem 0.3rem;
+    border-radius: 3px;
+  }
+`;
