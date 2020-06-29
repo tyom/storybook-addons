@@ -12,16 +12,27 @@ import { Events } from '.';
 
 type FixtureData = {};
 
-interface FixtureSettings {
+interface ISelectCallback {
+  ({ sectionId: string, variantIdx: number }): void;
+}
+
+interface IPanelSection {
+  id: string;
+  content: object;
+  active: boolean;
+  onSelect: ISelectCallback;
+}
+
+interface IFixtureSettings {
   singleTab?: boolean;
 }
 
-interface PanelSectionProps {
+interface IPanelSectionProps {
   active: boolean;
   fixtureContents: {};
   sectionId: string;
   selectedSectionId: string;
-  onSelect: ({ sectionId: string, variantIdx: number }) => void;
+  onSelect: ISelectCallback;
 }
 
 export function getEntries(obj = {}) {
@@ -76,11 +87,11 @@ const PanelSection = ({
   sectionId,
   selectedSectionId,
   onSelect,
-}: PanelSectionProps) => {
+}: IPanelSectionProps) => {
   const entries = getEntries(fixtureContents);
   const [activeIdx, setActiveIdx] = useState(0);
 
-  function activateVariant(idx: number) {
+  function activateVariant(idx: number): void {
     setActiveIdx(idx);
     onSelect({
       sectionId,
@@ -161,7 +172,7 @@ const PanelSection = ({
   );
 };
 
-function renderPanelSection({ id, content, active = true, onSelect }) {
+function renderPanelSection({ id, content, active = true, onSelect }: IPanelSection) {
   const selectedSectionId = active ? id : '';
   return (
     <PanelSection
@@ -178,8 +189,8 @@ function renderPanelSection({ id, content, active = true, onSelect }) {
 export default function Panel() {
   const channel = addons.getChannel();
   const [fixtures, setFixtures] = useState<FixtureData>({});
-  const [fixtureSettings, setFixtureSettings] = useState<FixtureSettings>({});
-  const [fixtureSelection, setFixtureSelection] = useState([]);
+  const [fixtureSettings, setFixtureSettings] = useState<IFixtureSettings>({});
+  const [fixtureSelection, setFixtureSelection] = useState<number[]>([]);
   const fixtureSections = Object.keys(fixtures);
   const [selectedSectionIdx, setSelectedSectionIdx] = useState(0);
   const entries = getEntries(fixtures);
@@ -201,7 +212,7 @@ export default function Panel() {
     channel.emit(Events.CHANGE, { fixtures, sectionId, variantIdx });
 
     const sectionIdx = Object.keys(fixtures).findIndex((x) => x === sectionId);
-    const newSelection = [...fixtureSelection];
+    const newSelection: number[] = [...fixtureSelection];
     newSelection[sectionIdx] = variantIdx;
     setFixtureSelection(newSelection);
 

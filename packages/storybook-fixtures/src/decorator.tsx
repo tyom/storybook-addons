@@ -5,7 +5,7 @@ import { useEffect } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
 import { fetchRemotes } from './Panel';
 import { ADDON_ID, PARAM_KEY, Events } from '.';
-import { PreviewQuery, Variant } from './types';
+import { PreviewQuery, Variant, FixtureParameters } from './types';
 
 // TODO
 // Avoid relying on module level variable.
@@ -28,7 +28,7 @@ function getVariant(fixtures = {}, sectionId: string, idx = 0): Variant {
   return variant;
 }
 
-function getVariantsFromQuery(fixtures, variantsQuery = '') {
+function getVariantsFromQuery(fixtures: FixtureParameters, variantsQuery = '') {
   const [variantsString, activeSectionIdx = 0] = variantsQuery.split(':');
   const fixtureVariants = variantsString.split(',').map(Number);
   const entries = Object.entries(fixtures);
