@@ -15,7 +15,7 @@
     "test:func:react": "yarn test:func --fixture-meta target=react",
     "test:func:vue": "yarn test:func --fixture-meta target=vue",
     "test:func:html": "yarn test:func --fixture-meta target=html",
-    "lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs .",
+    "lint": "eslint --ext .js,.jsx,.json,.html,.ts,.tsx,.mjs --ignore-path .gitignore .",
     "storybooks": "lerna run storybook --parallel",
     "examples": "yarn examples:build && yarn examples:serve",
     "examples:build": "lerna run build-storybook",
