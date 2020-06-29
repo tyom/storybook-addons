@@ -3,7 +3,7 @@ import qs from 'qs';
 import { FORCE_RE_RENDER } from '@storybook/core-events';
 import { useEffect } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
-import { fetchRemotes } from './Panel';
+import { fetchRemotes } from './remotes';
 import { ADDON_ID, PARAM_KEY, Events } from '.';
 import { PreviewQuery, Variant, FixtureParameters } from './types';
 

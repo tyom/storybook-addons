@@ -1,7 +1,7 @@
 import React from 'react';
 import addons, { RenderOptions } from '@storybook/addons';
 import { AddonPanel } from '@storybook/components';
-import Panel from './Panel';
+import Panel from './components/Panel';
 import { ADDON_ID, PANEL_ID, PARAM_KEY } from '.';
 
 addons.register(ADDON_ID, () => {
