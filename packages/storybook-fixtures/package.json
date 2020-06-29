@@ -8,13 +8,13 @@
     "watch": "del dist && tsc --watch"
   },
   "dependencies": {
-    "@storybook/addons": "~5.3.19",
+    "@storybook/addons": "^5.3.19",
     "@storybook/api": "^5.3.19",
     "@storybook/client-api": "^5.3.19",
     "@storybook/components": "^5.3.19",
     "@storybook/core-events": "^5.3.19",
     "@storybook/theming": "^5.3.19",
-    "cross-fetch": "~3.0.4",
+    "cross-fetch": "^3.0.5",
     "lodash": "^4.17.15",
     "qs": "^6.9.4"
   },
