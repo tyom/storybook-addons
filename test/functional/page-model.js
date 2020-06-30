@@ -19,6 +19,14 @@ class Page {
       .switchToMainWindow();
   }
 
+  assertClassInPreview(selector, className) {
+    return t
+      .switchToIframe('#storybook-preview-iframe')
+      .expect(Selector(selector).hasClass(className))
+      .eql(true)
+      .switchToMainWindow();
+  }
+
   selectSidebarItem(title) {
     const sidebarLink = Selector('.sidebar-container .simplebar-content').find(
       `a[title="${title}"]`

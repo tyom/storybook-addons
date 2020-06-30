@@ -26,6 +26,18 @@ useCases.forEach(({ urlPath, fixtureName }) => {
     )(fixtureName)
     .page(BASE_URL + urlPath);
 
+  test('Fixture Sections', async (t) => {
+    await page.selectSidebarItem('Fixture Sections');
+    await page.selectPanel('Fixtures');
+
+    await page.selectFixture('Panthera Genus');
+    await page.selectVariant('Leopard');
+    await page.selectFixture('Colors');
+    await page.selectVariant('Green');
+    await page.selectFixture('Panthera Genus');
+    await page.assertClassInPreview(titleSelector, 'text-green-700');
+  });
+
   test('Fixture setting: singleTab', async (t) => {
     await page.selectSidebarItem('fixture setting: singleTab');
     await page.selectPanel('Fixtures');
