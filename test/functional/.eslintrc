@@ -1,6 +1,8 @@
 {
-  "root": true,
-  "extends": ["plugin:testcafe/recommended"],
+  "globals": {
+    "fixture": false,
+    "test": false
+  },
   "parserOptions": {
     "ecmaVersion": 2019,
     "sourceType": "module"

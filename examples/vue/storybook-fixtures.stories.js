@@ -6,14 +6,14 @@ const pantheraCollection = Object.values(pantheraData);
 
 const Card = {
   template: `
-    <div class="font-sans text-gray-800 max-w-sm rounded overflow-hidden shadow-lg bg-white">
+    <div class="font-sans text-gray-800 max-w-sm rounded overflow-hidden shadow-lg bg-white" v-if="fixture">
       <div
         v-if='fixture.thumbnail'
         class="bg-cover h-64"
         :style="backgroundImageStyle"
       />
       <div class="px-6 py-4">
-        <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0">
+        <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0" :class="'text-' + fixture.textColor">
           {{ fixture.title }}
         </h2>
         <div class="text-gray-700 text-base" v-html="fixture.extract_html" />
@@ -31,6 +31,27 @@ const Card = {
 
 export default {
   title: 'storybook-fixtures',
+};
+
+export const fixtureSections = ({ fixtures: [genus, textColor = ''] }) => ({
+  ...Card,
+  props: {
+    fixture: {
+      default: { ...genus, textColor },
+    },
+  },
+});
+fixtureSections.story = {
+  decorators: [
+    withFixtures({
+      'Panthera Genus': pantheraData,
+      colors: {
+        Red: 'red-600',
+        Green: 'green-700',
+        Blue: 'blue-600',
+      },
+    }),
+  ],
 };
 
 export const collectionFixtureNoTab = ({ fixture }) => ({

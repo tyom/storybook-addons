@@ -1,5 +1,4 @@
-import { Selector } from 'testcafe';
-import { t } from 'testcafe';
+import { Selector, t } from 'testcafe';
 
 class Page {
   constructor() {
@@ -17,6 +16,14 @@ class Page {
       .switchToIframe('#storybook-preview-iframe')
       .expect(Selector(selector).innerText)
       .eql(expectedText)
+      .switchToMainWindow();
+  }
+
+  assertClassInPreview(selector, className) {
+    return t
+      .switchToIframe('#storybook-preview-iframe')
+      .expect(Selector(selector).hasClass(className))
+      .eql(true)
       .switchToMainWindow();
   }
 

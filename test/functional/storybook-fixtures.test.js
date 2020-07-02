@@ -18,7 +18,7 @@ const useCases = [
 ];
 const titleSelector = '[data-id="title"]';
 
-for (const { urlPath, fixtureName } of useCases) {
+useCases.forEach(({ urlPath, fixtureName }) => {
   fixture
     .meta(
       'target',
@@ -26,7 +26,19 @@ for (const { urlPath, fixtureName } of useCases) {
     )(fixtureName)
     .page(BASE_URL + urlPath);
 
-  test('Fixture setting: singleTab', async t => {
+  test('Fixture Sections', async (t) => {
+    await page.selectSidebarItem('Fixture Sections');
+    await page.selectPanel('Fixtures');
+
+    await page.selectFixture('Panthera Genus');
+    await page.selectVariant('Leopard');
+    await page.selectFixture('Colors');
+    await page.selectVariant('Green');
+    await page.selectFixture('Panthera Genus');
+    await page.assertClassInPreview(titleSelector, 'text-green-700');
+  });
+
+  test('Fixture setting: singleTab', async (t) => {
     await page.selectSidebarItem('fixture setting: singleTab');
     await page.selectPanel('Fixtures');
     await t.expect(page.fixtureTabs.exists).eql(false);
@@ -107,7 +119,7 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Lion');
   });
 
-  test('Keyboard shortcuts: section tabs', async t => {
+  test('Keyboard shortcuts: section tabs', async (t) => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
 
@@ -125,7 +137,7 @@ for (const { urlPath, fixtureName } of useCases) {
     await page.assertTextInPreview(titleSelector, 'Leopard');
   });
 
-  test('Keyboard shortcuts: variants', async t => {
+  test('Keyboard shortcuts: variants', async (t) => {
     await page.selectSidebarItem('Object Fixture');
     await page.selectPanel('Fixtures');
 
@@ -174,4 +186,4 @@ for (const { urlPath, fixtureName } of useCases) {
     await t.expect(page.panelTabs.find('button').withText('Fixtures').exists).notOk();
     await t.expect(page.fixtureTabs.find('button').exists).notOk();
   });
-}
+});

@@ -4,7 +4,7 @@ import pantheraData from '../__fixtures__/panthera.json';
 
 const pantheraCollection = Object.values(pantheraData);
 
-function renderTemplate({ title, extract_html, thumbnail }) {
+function renderTemplate({ title, extract_html, thumbnail } = {}, textColor = '') {
   if (!title || !extract_html) {
     return '';
   }
@@ -16,7 +16,7 @@ function renderTemplate({ title, extract_html, thumbnail }) {
             : ''
         }
         <div class="px-6 py-4">
-          <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0">
+          <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0 text-${textColor}">
             {{ title }}
           </h2>
           <div class="text-gray-700 text-base">{{ description }}</div>
@@ -29,6 +29,22 @@ function renderTemplate({ title, extract_html, thumbnail }) {
 }
 export default {
   title: 'storybook-fixtures',
+};
+
+export const fixtureSections = ({ fixtures: [genus, textColor = ''] }) =>
+  renderTemplate(genus, textColor);
+
+fixtureSections.story = {
+  decorators: [
+    withFixtures({
+      'Panthera Genus': pantheraData,
+      colors: {
+        Red: 'red-600',
+        Green: 'green-700',
+        Blue: 'blue-600',
+      },
+    }),
+  ],
 };
 
 export const collectionFixtureNoTab = ({ fixture }) => renderTemplate(fixture);
