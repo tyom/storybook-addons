@@ -45,6 +45,12 @@ function getVariantsFromQuery(fixtures: FixtureParameters, variantsQuery = '') {
   return [variantsFromQuery, Object.values(variantsFromQuery)[activeSectionIdx]];
 }
 
+function getFirstSectionVariant(fixturesObject): Variant {
+  const [firstSection = {}] = Object.values(fixturesObject);
+  const [firstVariant = {}] = Object.values(firstSection);
+  return firstVariant;
+}
+
 export const withFixtures = makeDecorator({
   name: ADDON_ID,
   parameterName: PARAM_KEY,
@@ -74,8 +80,10 @@ export const withFixtures = makeDecorator({
       };
     }, {});
 
-    const fixtureKeys: string[] = Object.keys(fixturesObject);
-    if (!fixtureKeys.length) {
+    if (fixtureEntries.length) {
+      activeVariant = activeVariant || getFirstSectionVariant(fixturesObject);
+    } else {
+      // Unset when no fixtures are given
       selectedVariants = {};
       activeVariant = undefined;
     }
