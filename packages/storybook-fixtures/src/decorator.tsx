@@ -1,17 +1,18 @@
 /* global window */
 import qs from 'qs';
+import { isNil } from 'lodash';
 import { FORCE_RE_RENDER } from '@storybook/core-events';
 import { useEffect } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
 import { fetchRemotes } from './remotes';
 import { ADDON_ID, PARAM_KEY, Events } from '.';
-import { PreviewQuery, Variant, FixtureParameters } from './types';
+import { PreviewQuery, Fixture, Variant, FixtureParameters } from './types';
 
 // TODO
 // Avoid relying on module level variable.
 // A better way would be to use hooks but Storybook's own cross-framework useState,
 // unlike useEffect is not in v5. It's supposed to be in v6 though
-let selectedVariants = {};
+let selectedVariants;
 let activeVariant: Variant | undefined;
 
 function getVariant(fixtures = {}, sectionId: string, idx = 0): Variant {
@@ -45,10 +46,10 @@ function getVariantsFromQuery(fixtures: FixtureParameters, variantsQuery = '') {
   return [variantsFromQuery, Object.values(variantsFromQuery)[activeSectionIdx]];
 }
 
-function getFirstSectionVariant(fixturesObject): Variant {
-  const [firstSection = {}] = Object.values(fixturesObject);
-  const [firstVariant = {}] = Object.values(firstSection);
-  return firstVariant;
+function getDefaultVariants(fixturesObject): Variant[] {
+  return Object.values(fixturesObject).map(
+    (section: Fixture) => Object.values(section)[0]
+  );
 }
 
 export const withFixtures = makeDecorator({
@@ -70,6 +71,7 @@ export const withFixtures = makeDecorator({
     };
     // extract special settings properties
     const fixturesObject = fixtureEntries.reduceRight((acc, [k, v]) => {
+      if (isNil(v)) return acc;
       if (k.startsWith('__')) {
         fixtureSettings[k.replace('__', '')] = v;
         return acc;
@@ -81,7 +83,9 @@ export const withFixtures = makeDecorator({
     }, {});
 
     if (fixtureEntries.length) {
-      activeVariant = activeVariant || getFirstSectionVariant(fixturesObject);
+      // set first item of each section as default value
+      selectedVariants = selectedVariants || getDefaultVariants(fixturesObject);
+      activeVariant = activeVariant || selectedVariants[0];
     } else {
       // Unset when no fixtures are given
       selectedVariants = {};
@@ -117,7 +121,7 @@ export const withFixtures = makeDecorator({
 
       return () => {
         channel.off(Events.CHANGE, handleFixtureChange);
-        selectedVariants = {};
+        selectedVariants = undefined;
         activeVariant = undefined;
         channel.emit(Events.INIT, {});
       };
