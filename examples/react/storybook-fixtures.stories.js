@@ -72,7 +72,6 @@ collectionFixture.story = {
 };
 
 export const objectFixture = ({ fixture }) => {
-  // console.log(fixture);
   return <Card {...fixture} />;
 };
 objectFixture.story = {

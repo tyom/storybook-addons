@@ -127,7 +127,7 @@ export const withFixtures = makeDecorator({
       };
     }, []);
 
-    const fixtures = Object.values(selectedVariants);
+    const fixtures: Variant[] = Object.values(selectedVariants);
 
     return storyFn({
       ...context,
