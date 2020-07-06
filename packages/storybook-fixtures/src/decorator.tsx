@@ -1,6 +1,6 @@
 /* global window */
 import qs from 'qs';
-import { isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 import { FORCE_RE_RENDER } from '@storybook/core-events';
 import { useEffect } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
@@ -71,11 +71,11 @@ export const withFixtures = makeDecorator({
     };
     // extract special settings properties
     const fixturesObject = fixtureEntries.reduceRight((acc, [k, v]) => {
-      if (isNil(v)) return acc;
       if (k.startsWith('__')) {
         fixtureSettings[k.replace('__', '')] = v;
         return acc;
       }
+      if (isEmpty(v)) return acc;
       return {
         [k]: v,
         ...acc,
