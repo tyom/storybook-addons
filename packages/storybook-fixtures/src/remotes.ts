@@ -16,9 +16,10 @@ export async function fetchRemotes(
     // eslint-disable-next-line no-restricted-syntax
     for await (const [vKey, vVal] of variantEntries) {
       const variantKey = isVariantsArray ? `Variant ${Number(vKey) + 1}` : vKey;
-      if (typeof vVal === 'string' && /^\.?\/|https?:\/\//.test(vVal)) {
+      if (isFetchString(vVal)) {
+        const url = vVal.replace(/^fetch::/, '');
         try {
-          result[key][variantKey] = await fetch(vVal).then((r) => {
+          result[key][variantKey] = await fetch(url).then((r) => {
             if (!r.ok) {
               // eslint-disable-next-line no-console
               console.error(`Failed to fetch ${vVal}`);
@@ -36,3 +37,6 @@ export async function fetchRemotes(
 
   return result;
 }
+
+const isFetchString = (arg: any): boolean =>
+  typeof arg === 'string' && /^fetch::\.?\/|https?:\/\//.test(arg);

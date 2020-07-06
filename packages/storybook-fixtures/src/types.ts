@@ -6,7 +6,7 @@ export type Fixture = {
   [key: string]: Variant;
 };
 
-export type Variant = {} | string;
+export type Variant = any;
 
 export type PreviewQuery = {
   fixture: string;

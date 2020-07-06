@@ -123,6 +123,7 @@ export const withFixtures = makeDecorator({
         channel.off(Events.CHANGE, handleFixtureChange);
         selectedVariants = undefined;
         activeVariant = undefined;
+        // Unset when changing story
         channel.emit(Events.INIT, {});
       };
     }, []);

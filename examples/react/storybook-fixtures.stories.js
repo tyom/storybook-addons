@@ -88,9 +88,9 @@ remoteFixture.story = {
   decorators: [
     withFixtures({
       Neofelis: {
-        'Clouded Leopard': './local-data.json',
+        'Clouded Leopard': 'fetch::./local-data.json',
         'Sunda Clouded Leopard':
-          'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
+          'fetch::https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
       },
     }),
   ],

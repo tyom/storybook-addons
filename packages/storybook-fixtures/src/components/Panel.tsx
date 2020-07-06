@@ -38,7 +38,7 @@ export default function Panel() {
   const entries = getEntries(fixtures);
   const api = useStorybookApi();
 
-  async function initialise(storyOptions, settings) {
+  async function initialiseRemotes(storyOptions, settings) {
     try {
       const resolvedFixtures = await fetchRemotes(storyOptions);
       setFixtures(resolvedFixtures);
@@ -63,7 +63,7 @@ export default function Panel() {
     });
   }
 
-  function handleSectionSelect(id: string) {
+  function handleSelect(id: string) {
     const idx = fixtureSections.findIndex((s) => s === id);
     setSelectedSectionIdx(idx);
   }
@@ -90,7 +90,7 @@ export default function Panel() {
   }
 
   useEffect(() => {
-    channel.on(Events.INIT, initialise);
+    channel.on(Events.INIT, initialiseRemotes);
 
     if (fixtureSections.length) {
       setSelectedSectionIdx(selectedSectionIdx);
@@ -99,14 +99,14 @@ export default function Panel() {
     }
 
     return () => {
-      channel.off(Events.INIT, initialise);
+      channel.off(Events.INIT, initialiseRemotes);
 
       if (fixtureSections.length) {
         document.removeEventListener('keydown', handleKeyDown);
         channel.off(PREVIEW_KEYDOWN, handlePreviewKeyDown);
       }
     };
-  }, [JSON.stringify(fixtureSections), selectedSectionIdx]);
+  }, [fixtureSections.length, selectedSectionIdx]);
 
   if (!entries.length) {
     return null;
@@ -127,12 +127,13 @@ export default function Panel() {
       id="tabbed-fixture-sections"
       absolute
       bordered
-      actions={{ onSelect: handleSectionSelect }}
+      actions={{ onSelect: handleSelect }}
       selected={fixtureSections[selectedSectionIdx]}
     >
       {entries.map(([k, v], idx) => (
         <div
           id={k}
+          key={k}
           // @ts-ignore (title as render function. <div> is a placeholder here. The props are used to populate custom elements within Tabs)
           title={() => (
             <StyledTabButtonContent>
@@ -142,7 +143,6 @@ export default function Panel() {
               )}
             </StyledTabButtonContent>
           )}
-          key={k}
         >
           {({ active }: { active: boolean }) =>
             renderPanelSection({
