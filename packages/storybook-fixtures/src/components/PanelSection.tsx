@@ -89,7 +89,10 @@ const PanelSection = ({
         <FixturesMenu>
           {entries.map(([key, value], idx) => {
             const buttonClass = [activeIdx === idx && 'active'].filter(Boolean).join(' ');
-            const previewText = JSON.stringify(value, null, 2).trim().slice(0, 300);
+            const previewText = JSON.stringify(value, null, 2);
+            const previewTextTrimmed = previewText
+              ? previewText.trim().slice(0, 300)
+              : previewText;
             const keyNumber = idx + 1;
 
             return (
@@ -106,7 +109,7 @@ const PanelSection = ({
                 onClick={() => activateVariant(idx)}
               >
                 {keyNumber < 10 && <span className="key">{keyNumber}</span>}
-                <span className="preview">{previewText}</span>
+                <span className="preview">{previewTextTrimmed}</span>
                 <span className="name">{key}</span>
               </FixtureButton>
             );
