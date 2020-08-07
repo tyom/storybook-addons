@@ -8,10 +8,9 @@ export type Fixture = {
 
 export type Variant = any;
 
-export type PreviewQuery = {
-  fixture: string;
-  variant: number;
-  fixtures: string;
+export type StateQuery = {
+  query?: string;
+  fixtures?: string;
 };
 
 export type KeyboardEvent = {

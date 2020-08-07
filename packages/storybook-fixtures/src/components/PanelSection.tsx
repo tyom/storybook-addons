@@ -7,42 +7,23 @@ import { TabWrapper } from '@storybook/components';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
 import { getEntries } from './Panel';
 
-interface ISelectCallback {
-  ({ sectionId: string, variantIdx: number }): void;
-}
-
-interface IPanelSection {
-  id: string;
-  content: object;
-  active: boolean;
-  onSelect: ISelectCallback;
-}
-
 interface IPanelSectionProps {
   active: boolean;
   fixtureContents: {};
-  sectionId: string;
-  selectedSectionId: string;
-  onSelect: ISelectCallback;
+  sectionIdx?: number;
+  selectedFixtureIdx: number;
+  onSelect: Function;
 }
 
-const PanelSection = ({
+export default function PanelSection({
   active,
   fixtureContents,
-  sectionId,
-  selectedSectionId,
+  sectionIdx = 0,
+  selectedFixtureIdx,
   onSelect,
-}: IPanelSectionProps) => {
+}: IPanelSectionProps) {
   const entries = getEntries(fixtureContents);
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  function activateVariant(idx: number): void {
-    setActiveIdx(idx);
-    onSelect({
-      sectionId,
-      variantIdx: idx,
-    });
-  }
+  const [activeIdx, setActiveIdx] = useState(selectedFixtureIdx);
 
   function handlePreviewKeyDown({ event }: PreviewKeyDownEvent) {
     handleKeyDown(event);
@@ -50,21 +31,26 @@ const PanelSection = ({
 
   function handleKeyDown({ key }: KeyboardEvent) {
     let keyedIndex = Number(key) - 1;
-    // Vim navigation: up/down to switch variants
+    // Vim-style navigation: up/down to switch variants
     if (['k', 'j'].includes(key)) {
       keyedIndex = key === 'k' ? activeIdx + 1 : activeIdx - 1;
     }
-
     if (keyedIndex >= 0 && keyedIndex < entries.length && keyedIndex < 10) {
-      activateVariant(keyedIndex);
+      setActiveIdx(keyedIndex);
     }
   }
 
   useEffect(() => {
     const channel = addons.getChannel();
+
     if (active) {
       channel.on(PREVIEW_KEYDOWN, handlePreviewKeyDown);
       document.addEventListener('keydown', handleKeyDown);
+
+      onSelect({
+        sectionIdx,
+        variantIdx: activeIdx,
+      });
     }
 
     return () => {
@@ -73,14 +59,7 @@ const PanelSection = ({
         document.removeEventListener('keydown', handleKeyDown);
       }
     };
-  }, [sectionId, active, activeIdx]);
-
-  useEffect(() => {
-    // activate on tab switch
-    if (active && sectionId === selectedSectionId) {
-      activateVariant(activeIdx);
-    }
-  }, [selectedSectionId]);
+  }, [active, activeIdx]);
 
   return (
     <TabWrapper
@@ -88,7 +67,9 @@ const PanelSection = ({
       render={() => (
         <FixturesMenu>
           {entries.map(([key, value], idx) => {
-            const buttonClass = [activeIdx === idx && 'active'].filter(Boolean).join(' ');
+            const buttonClass = [selectedFixtureIdx === idx && 'active']
+              .filter(Boolean)
+              .join(' ');
             const previewText = JSON.stringify(value, null, 2);
             const previewTextTrimmed = previewText
               ? previewText.trim().slice(0, 300)
@@ -106,7 +87,7 @@ const PanelSection = ({
                     : undefined
                 }
                 data-id={key}
-                onClick={() => activateVariant(idx)}
+                onClick={() => setActiveIdx(idx)}
               >
                 {keyNumber < 10 && <span className="key">{keyNumber}</span>}
                 <span className="preview">{previewTextTrimmed}</span>
@@ -116,25 +97,6 @@ const PanelSection = ({
           })}
         </FixturesMenu>
       )}
-    />
-  );
-};
-
-export function renderPanelSection({
-  id,
-  content,
-  active = true,
-  onSelect,
-}: IPanelSection) {
-  const selectedSectionId = active ? id : '';
-  return (
-    <PanelSection
-      key={id}
-      active={active}
-      fixtureContents={content}
-      sectionId={id}
-      selectedSectionId={selectedSectionId}
-      onSelect={onSelect}
     />
   );
 }
@@ -205,7 +167,7 @@ const FixtureButton = styled.button`
   }
 
   .name {
-    font-size: 1.6em;
+    font-size: 1.5em;
     position: absolute;
     font-weight: 600;
     bottom: 0.2rem;

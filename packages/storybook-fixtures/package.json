@@ -8,6 +8,7 @@
     "watch": "del dist && tsc --watch"
   },
   "dependencies": {
+    "@rehooks/local-storage": "2.4.0",
     "@storybook/addons": "^5.3.19",
     "@storybook/api": "^5.3.19",
     "@storybook/client-api": "^5.3.19",
