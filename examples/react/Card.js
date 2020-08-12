@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 
 // Styling with Tailwind CSS https://tailwindcss.com

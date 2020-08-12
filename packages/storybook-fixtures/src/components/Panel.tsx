@@ -3,20 +3,24 @@ import isPlainObject from 'lodash/isPlainObject';
 import React, { useEffect, useState } from 'react';
 import addons from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
-import { Tabs } from '@storybook/components';
-import { useLocalStorage } from '@rehooks/local-storage';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { styled } from '@storybook/theming';
-import { fetchRemotes } from '../remotes';
 import PanelSection from './PanelSection';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
-import VariantSelector from '../variant-selector';
+import { parseStoryState, stringifyStoryState } from '../fixtures';
+import { Tabs } from './Tabs';
 import { ADDON_ID, Events } from '..';
 
 type FixtureData = {};
 
 interface IFixtureSettings {
   singleTab?: boolean;
+}
+
+interface IFixturesWithSettings {
+  fixtures: FixtureData;
+  settings: IFixtureSettings;
 }
 
 export function getEntries(obj = {}) {
@@ -33,48 +37,48 @@ export default function Panel() {
   const api = useStorybookApi();
   const { storyId = '' } = api.getUrlState();
 
-  if (!storyId) {
-    return null;
-  }
-
   const [storiesState] = useLocalStorage(ADDON_ID, {});
+  const { selectedSectionIdx, selectedVariantIdxs } = getCurrentStoryState();
   const [fixtures, setFixtures] = useState<FixtureData>({});
   const [fixtureSettings, setFixtureSettings] = useState<IFixtureSettings>({});
-  const { selectedSectionIdx, selectedVariants } = getCurrentStoryState();
 
-  const selectedVariantIdx = selectedVariants[selectedSectionIdx];
+  const selectedVariantIdx = selectedVariantIdxs[selectedSectionIdx];
   const [activeSectionIdx, setActiveSectionIdx] = useState(selectedSectionIdx);
 
   const channel = addons.getChannel();
   const entries = getEntries(fixtures);
   const sectionNames = Object.keys(fixtures);
 
-  async function initialise(variantSelector) {
-    try {
-      const resolvedFixtures = await fetchRemotes(variantSelector.fixtures);
-      setFixtures(resolvedFixtures);
-      setFixtureSettings(variantSelector.settings);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Some requests have failed.', err);
+  async function initialise(
+    initialValues: IFixturesWithSettings = {
+      fixtures: {},
+      settings: {},
     }
+  ) {
+    setFixtures(initialValues.fixtures);
+    setFixtureSettings(initialValues.settings);
+    // Initialise to first section to avoid trying to select non-existing section in the following story
+    setActiveSectionIdx(0);
   }
 
   function getCurrentStoryState() {
     const currentStory = storiesState[storyId] || {};
-    return VariantSelector.fromQuery(currentStory.query);
+    return parseStoryState(currentStory.query);
   }
 
-  function handleVariantSelect({ sectionIdx, variantIdx }): void {
+  function selectVariant(sectionIdx, variantIdx?): void {
+    setActiveSectionIdx(sectionIdx);
+
     channel.emit(Events.SELECT_FIXTURE, {
       sectionIdx,
       variantIdx,
     });
   }
 
-  function handleSectionChange(id: string) {
+  function selectSection(sectionIdx) {
+    setActiveSectionIdx(sectionIdx);
     channel.emit(Events.SELECT_FIXTURE, {
-      sectionIdx: sectionNames.findIndex((s) => s === id),
+      sectionIdx,
     });
   }
 
@@ -86,30 +90,28 @@ export default function Panel() {
     // Keys 1-9 with Alt pressed
     if (altKey && keyCode >= 49 && keyCode <= 57) {
       // 0-based index of tab
-      setActiveSectionIdx(-49 + keyCode);
+      selectSection(-49 + keyCode);
     }
     // Vim navigation: left/right to switch section tabs
     // Switch to right
     if (key === 'l' && activeSectionIdx < sectionNames.length - 1) {
-      setActiveSectionIdx(activeSectionIdx + 1);
+      selectSection(activeSectionIdx + 1);
     }
     // Switch to left
     if (key === 'h' && activeSectionIdx > 0) {
-      setActiveSectionIdx(activeSectionIdx - 1);
+      selectSection(activeSectionIdx - 1);
     }
   }
 
-  useEffect(() => {
-    channel.emit(Events.SELECT_FIXTURE, {
-      sectionIdx: activeSectionIdx,
-    });
-  }, [activeSectionIdx]);
+  function handleResetSelections() {
+    channel.emit(Events.SELECT_FIXTURE, null);
+  }
 
   useEffect(() => {
-    channel.on(Events.INIT, initialise);
+    channel.on(Events.INIT_PANEL, initialise);
 
     return () => {
-      channel.off(Events.INIT, initialise);
+      channel.off(Events.INIT_PANEL, initialise);
     };
   }, []);
 
@@ -127,57 +129,41 @@ export default function Panel() {
     };
   }, [JSON.stringify(sectionNames), activeSectionIdx]);
 
-  if (entries.length === 1 && !fixtureSettings?.singleTab) {
-    const [[, sectionVariants]] = entries;
-    return (
+  useEffect(() => {
+    api.setQueryParams({
+      fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
+    });
+  }, [activeSectionIdx, JSON.stringify(selectedVariantIdxs)]);
+
+  const createLabel = (label, key) => (
+    <StyledTabButtonContent>
+      <span className="tab-label">{label}</span>
+      {entries.length > 1 && key <= 9 && <span className="tab-label-key">alt+{key}</span>}
+    </StyledTabButtonContent>
+  );
+
+  const tabs = entries.map(([label, contents], idx) => ({
+    label: createLabel(label, idx + 1),
+    panel: (
       <PanelSection
-        active
-        fixtureContents={sectionVariants}
+        key={label}
+        active={activeSectionIdx === idx}
+        fixtureContents={contents}
+        sectionIdx={idx}
         selectedFixtureIdx={selectedVariantIdx}
-        onSelect={handleVariantSelect}
+        onSelect={selectVariant}
       />
-    );
-  }
+    ),
+  }));
 
   return (
     <Tabs
-      id="tabbed-fixture-sections"
-      absolute
-      bordered
-      actions={{ onSelect: handleSectionChange }}
-      selected={sectionNames[selectedSectionIdx]}
-    >
-      {entries.map(([k, v], idx) => {
-        return (
-          <div
-            id={k}
-            key={k}
-            // @ts-ignore (title as render function. <div> is a placeholder here. The props are used to populate custom elements within Tabs)
-            title={() => (
-              <StyledTabButtonContent>
-                <span className="tab-label">{k}</span>
-                {entries.length > 1 && idx < 9 && (
-                  <span className="tab-label-key">alt+{idx + 1}</span>
-                )}
-              </StyledTabButtonContent>
-            )}
-          >
-            {({ active }: { active: boolean }) => {
-              return (
-                <PanelSection
-                  key={k}
-                  active={active}
-                  fixtureContents={v}
-                  sectionIdx={idx}
-                  selectedFixtureIdx={selectedVariantIdx}
-                  onSelect={handleVariantSelect}
-                />
-              );
-            }}
-          </div>
-        );
-      })}
-    </Tabs>
+      tabs={tabs}
+      singleTab={fixtureSettings.singleTab}
+      activeIdx={activeSectionIdx}
+      onTabClick={selectSection}
+      onResetSelections={handleResetSelections}
+    />
   );
 }
 

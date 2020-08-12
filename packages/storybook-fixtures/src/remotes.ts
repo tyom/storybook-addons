@@ -1,9 +1,7 @@
 import fetch from 'cross-fetch';
-import { FixtureParameters } from './types';
+import { FixtureSections } from './types';
 
-export async function fetchRemotes(
-  fixtures: FixtureParameters
-): Promise<FixtureParameters> {
+export async function fetchRemotes(fixtures: FixtureSections): Promise<FixtureSections> {
   const entries = Object.entries(fixtures);
   const result = {};
 

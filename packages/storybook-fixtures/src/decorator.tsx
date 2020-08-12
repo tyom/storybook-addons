@@ -1,14 +1,12 @@
 /* global window */
 import qs from 'qs';
-import { useEffect } from '@storybook/client-api';
+import { useEffect, useState, useRef } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
-import { useLocalStorage } from '@rehooks/local-storage';
-import VariantSelector from './variant-selector';
-import { StateQuery } from './types';
+import { writeStorage } from '@rehooks/local-storage';
+import { SelectionUrlQuery } from './types';
+import { fetchRemotes } from './remotes';
+import { processInput, stringifyStoryState, getStoryFixturesState } from './fixtures';
 import { ADDON_ID, PARAM_KEY, Events } from '.';
-
-const variantSelector = new VariantSelector();
-let selectedVariants: number[] = [];
 
 export const withFixtures = makeDecorator({
   name: ADDON_ID,
@@ -19,49 +17,95 @@ export const withFixtures = makeDecorator({
     { options = {}, parameters = {} }
   ) => {
     const channel = addons.getChannel();
-    const urlQuery: StateQuery = qs.parse(window.location.search);
+    const urlQuery: SelectionUrlQuery = qs.parse(window.location.search);
 
-    variantSelector.processInput({
+    const fixturesInput = {
       ...options,
       ...parameters,
+    };
+
+    const { fixtures: initialFixtures, settings } = processInput(fixturesInput);
+    const [fixtures, setFixtures] = useState(initialFixtures);
+    const [initialised, setInitialised] = useState(false);
+    const [localState, setLocalState] = useState(
+      JSON.parse(window.localStorage.getItem(ADDON_ID) || '{}')
+    );
+    const serialisedLocalState = JSON.stringify(localState);
+
+    const {
+      selectedVariants,
+      activeVariant,
+      selectedVariantIdxs,
+    } = getStoryFixturesState({
+      fixtures,
+      storyId: context.id,
+      localState,
+      urlQuery: urlQuery.fixtures,
     });
 
-    const [storiesState, setStoriesState] = useLocalStorage(ADDON_ID, {});
-    const { query } = storiesState[context.id] || {};
-    const currentStoryState = VariantSelector.fromQuery(query);
-    selectedVariants = [...currentStoryState.selectedVariants];
+    const selectedVariantIdxsRef = useRef(selectedVariantIdxs);
 
-    function getStoryQuery(sectionIdx, variantIdx?) {
-      if (typeof variantIdx !== 'undefined') {
-        selectedVariants[sectionIdx] = variantIdx;
+    async function initialise() {
+      try {
+        const resolvedFixtures = await fetchRemotes(fixtures);
+        setFixtures(resolvedFixtures);
+        setInitialised(true);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('Some requests have failed.', err);
       }
-      return VariantSelector.toQuery({
-        selectedSectionIdx: sectionIdx,
-        selectedVariants,
-      });
     }
 
-    function updateLocalState({ sectionIdx, variantIdx }) {
-      setStoriesState({
-        ...storiesState,
+    function getStoryQuery(sectionIdx, variantIdx?) {
+      const variantIdxs: number[] = selectedVariantIdxsRef.current;
+      if (typeof variantIdx !== 'undefined') {
+        variantIdxs[sectionIdx] = variantIdx;
+      }
+      return stringifyStoryState(variantIdxs, sectionIdx);
+    }
+
+    function updateLocalState(state) {
+      if (!state) {
+        setLocalState({});
+        selectedVariantIdxsRef.current = [];
+        return;
+      }
+      setLocalState({
+        ...localState,
         [context.id]: {
-          query: getStoryQuery(sectionIdx, variantIdx),
+          query: getStoryQuery(state.sectionIdx, state.variantIdx),
         },
       });
     }
 
-    // Initialise from query or local storage
-    variantSelector.applyQuery(urlQuery.fixtures || query);
+    useEffect(() => {
+      initialise();
+      channel.on(Events.SELECT_FIXTURE, updateLocalState);
+
+      return () => {
+        channel.off(Events.SELECT_FIXTURE, updateLocalState);
+        // Unset fixtures to avoid the next story
+        channel.emit(Events.INIT_PANEL);
+      };
+    }, []);
 
     useEffect(() => {
-      channel.emit(Events.INIT, variantSelector);
-      channel.on(Events.SELECT_FIXTURE, updateLocalState);
-    }, []);
+      if (initialised) {
+        channel.emit(Events.INIT_PANEL, {
+          fixtures,
+          settings,
+        });
+      }
+    }, [initialised]);
+
+    useEffect(() => {
+      writeStorage(ADDON_ID, localState);
+    }, [serialisedLocalState]);
 
     return storyFn({
       ...context,
-      fixtures: variantSelector.selectedVariants,
-      fixture: variantSelector.activeVariant,
+      fixtures: selectedVariants,
+      fixture: activeVariant,
     });
   },
 });

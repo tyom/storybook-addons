@@ -3,7 +3,7 @@ export const PARAM_KEY = 'fixtures';
 export const PANEL_ID = `${ADDON_ID}/panel`;
 
 export const Events = {
-  INIT: `${ADDON_ID}/init`,
+  INIT_PANEL: `${ADDON_ID}/init`,
   SELECT_FIXTURE: `${ADDON_ID}/select-fixture`,
 };
 
