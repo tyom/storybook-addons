@@ -5,10 +5,10 @@ class Page {
     this.panelTabs = Selector(
       '#storybook-panel-root > div:nth-child(1) [role="tablist"]'
     );
-    this.fixtureTabs = Selector(
-      '#storybook-panel-root > div:nth-child(2) [role="tablist"]'
+    this.fixtureTabs = Selector('#storybook-panel-root .fixture-section-tabs');
+    this.tabActions = Selector(
+      '#storybook-panel-root #panel-tab-content > div > div > menu + div'
     );
-    this.tabbedSections = Selector('#tabbed-fixture-sections');
   }
 
   assertTextInPreview(selector, expectedText) {
@@ -28,9 +28,9 @@ class Page {
   }
 
   selectSidebarItem(title) {
-    const sidebarLink = Selector('.sidebar-container .simplebar-content').find(
-      `a[title="${title}"]`
-    );
+    const sidebarLink = Selector('.sidebar-container .os-content')
+      .find('a')
+      .withText(title);
     return t.click(sidebarLink);
   }
 
@@ -50,8 +50,12 @@ class Page {
     return t.click(variantButton);
   }
 
+  selectActionBarItem(itemName) {
+    return t.click(this.tabActions.find('button').withText(itemName));
+  }
+
   openCanvasInNewTab() {
-    return t.click('button[title="Open canvas in new tab"]');
+    return t.click('a[title="Open canvas in new tab"]');
   }
 
   async hasSections() {
