@@ -2,7 +2,12 @@
 import { Selector } from 'testcafe';
 import page from './page-model';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
+const isReact = BASE_URL.includes(':6006');
+const isVue = BASE_URL.includes(':6009');
+const isHtml = BASE_URL.includes(':6008');
+const isDevServer = isReact || isVue || isHtml;
+
 const useCases = [
   {
     urlPath: '/react',
@@ -16,10 +21,26 @@ const useCases = [
     urlPath: '/html',
     fixtureName: 'HTML',
   },
-];
+].filter((x) =>
+  // filter out individual run scripts or use all use cases
+  isDevServer
+    ? (x.urlPath.includes('react') && isReact) ||
+      (x.urlPath.includes('vue') && isVue) ||
+      (x.urlPath.includes('html') && isHtml)
+    : true
+);
 const titleSelector = '[data-id="title"]';
 
-useCases.forEach(({ urlPath, fixtureName }) => {
+const environmentUseCases = useCases.map((c) =>
+  isDevServer
+    ? {
+        ...c,
+        urlPath: '/',
+      }
+    : c
+);
+
+environmentUseCases.forEach(({ urlPath, fixtureName }) => {
   fixture
     .meta(
       'target',
