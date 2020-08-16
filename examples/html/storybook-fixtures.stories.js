@@ -31,81 +31,69 @@ export default {
   title: 'storybook-fixtures',
 };
 
-export const fixtureSections = ({ fixtures: [genus, textColor = ''] }) =>
+export const fixtureSections = (_, { fixtures: [genus, textColor = ''] }) =>
   renderTemplate(genus, textColor);
 
-fixtureSections.story = {
-  decorators: [
-    withFixtures({
-      'Panthera Genus': pantheraData,
-      colors: {
-        Red: 'red-600',
-        Green: 'green-700',
-        Blue: 'blue-600',
-      },
-    }),
-  ],
-};
+fixtureSections.decorators = [
+  withFixtures({
+    'Panthera Genus': pantheraData,
+    colors: {
+      Red: 'red-600',
+      Green: 'green-700',
+      Blue: 'blue-600',
+    },
+  }),
+];
 
-export const collectionFixtureNoTab = ({ fixture }) => renderTemplate(fixture);
-collectionFixtureNoTab.story = {
-  name: 'fixture setting: singleTab',
-  decorators: [
-    withFixtures({
-      collection: pantheraCollection,
-    }),
-  ],
-};
+export const collectionFixtureNoTab = (_, { fixture }) => renderTemplate(fixture);
+collectionFixtureNoTab.storyName = 'fixture setting: singleTab';
+collectionFixtureNoTab.decorators = [
+  withFixtures({
+    collection: pantheraCollection,
+  }),
+];
 
-export const collectionFixture = ({ fixture }) => renderTemplate(fixture);
-collectionFixture.story = {
-  decorators: [
-    withFixtures({
-      __singleTab: true,
-      collection: pantheraCollection,
-    }),
-  ],
-};
+export const collectionFixture = (_, { fixture }) => renderTemplate(fixture);
+collectionFixture.decorators = [
+  withFixtures({
+    __singleTab: true,
+    collection: pantheraCollection,
+  }),
+];
 
-export const objectFixture = ({ fixture }) => renderTemplate(fixture);
-objectFixture.story = {
-  decorators: [
-    withFixtures({
-      'Panthera Genus': pantheraData,
-      'Keyed collection': keyBy(pantheraCollection, 'description'),
-    }),
-  ],
-};
+export const objectFixture = (_, { fixture }) => renderTemplate(fixture);
+objectFixture.decorators = [
+  withFixtures({
+    'Panthera Genus': pantheraData,
+    'Keyed collection': keyBy(pantheraCollection, 'description'),
+  }),
+];
 
-export const remoteFixture = ({ fixture }) => renderTemplate(fixture);
-remoteFixture.story = {
-  decorators: [
-    withFixtures({
-      Neofelis: {
-        'Clouded Leopard':
-          'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
-        'Sunda Clouded Leopard':
-          'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
-      },
-    }),
-  ],
-};
+export const remoteFixture = (_, { fixture }) => renderTemplate(fixture);
+remoteFixture.decorators = [
+  withFixtures({
+    Neofelis: {
+      'Clouded Leopard':
+        'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
+      'Sunda Clouded Leopard':
+        'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
+    },
+  }),
+];
 
-export const stringValueFixture = ({ fixture }) =>
+export const stringValueFixture = (_, { fixture }) =>
   `<h1 class="font-sans">${fixture}</h1>`;
 
-stringValueFixture.story = {
-  decorators: [
-    withFixtures({
-      Values: {
-        Tiger: 'Largest species of the cat family',
-        Lion: 'A large cat native to Africa and Asia',
-        Jaguar: 'A large cat native to Americas',
-        Leopard: 'A large cat native to Africa and Eurasia',
-      },
-    }),
-  ],
-};
+stringValueFixture.decorators = [
+  withFixtures({
+    Values: {
+      Tiger: 'Largest species of the cat family',
+      Lion: 'A large cat native to Africa and Asia',
+      Jaguar: 'A large cat native to Americas',
+      Leopard: 'A large cat native to Africa and Eurasia',
+    },
+  }),
+];
 
 export const noFixture = () => {
   return renderTemplate({
@@ -122,8 +110,6 @@ export const disabledFixture = () => {
       '<p>For testing fixture state when switching to stories which disable it.</p>',
   });
 };
-disabledFixture.story = {
-  parameters: {
-    fixtures: { disabled: true },
-  },
+disabledFixture.parameters = {
+  fixtures: { disabled: true },
 };

@@ -1,17 +1,17 @@
-export type FixtureParameters = {
-  [key: string]: Fixture;
+export type FixtureSections = {
+  [key: string]: FixtureVariants;
 };
 
-export type Fixture = {
+export type FixtureVariants = {
   [key: string]: Variant;
 };
 
 export type Variant = any;
 
-export type PreviewQuery = {
-  fixture: string;
-  variant: number;
-  fixtures: string;
+export type SelectionQuery = string | undefined;
+
+export type SelectionUrlQuery = {
+  fixtures?: SelectionQuery;
 };
 
 export type KeyboardEvent = {

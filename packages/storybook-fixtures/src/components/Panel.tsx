@@ -3,19 +3,24 @@ import isPlainObject from 'lodash/isPlainObject';
 import React, { useEffect, useState } from 'react';
 import addons from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
-import { Tabs } from '@storybook/components';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { styled } from '@storybook/theming';
-import { fetchRemotes } from '../remotes';
-import { renderPanelSection } from './PanelSection';
+import PanelSection from './PanelSection';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
-import { Events } from '..';
+import { parseStoryState, stringifyStoryState } from '../fixtures';
+import { Tabs } from './Tabs';
+import { ADDON_ID, Events } from '..';
 
 type FixtureData = {};
-type FixtureSelection = number[];
 
 interface IFixtureSettings {
   singleTab?: boolean;
+}
+
+interface IFixturesWithSettings {
+  fixtures: FixtureData;
+  settings: IFixtureSettings;
 }
 
 export function getEntries(obj = {}) {
@@ -29,43 +34,52 @@ export function getEntries(obj = {}) {
 }
 
 export default function Panel() {
-  const channel = addons.getChannel();
+  const api = useStorybookApi();
+  const { storyId = '' } = api.getUrlState();
+
+  const [storiesState] = useLocalStorage(ADDON_ID, {});
+  const { selectedSectionIdx, selectedVariantIdxs } = getCurrentStoryState();
   const [fixtures, setFixtures] = useState<FixtureData>({});
   const [fixtureSettings, setFixtureSettings] = useState<IFixtureSettings>({});
-  const [fixtureSelection, setFixtureSelection] = useState<FixtureSelection>([]);
-  const [selectedSectionIdx, setSelectedSectionIdx] = useState<number>(0);
-  const fixtureSections = Object.keys(fixtures);
-  const entries = getEntries(fixtures);
-  const api = useStorybookApi();
 
-  async function initialiseRemotes(storyOptions, settings) {
-    try {
-      const resolvedFixtures = await fetchRemotes(storyOptions);
-      setFixtures(resolvedFixtures);
-      setFixtureSettings(settings);
-      setFixtureSelection([]);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Some requests have failed.', err);
+  const selectedVariantIdx = selectedVariantIdxs[selectedSectionIdx];
+  const [activeSectionIdx, setActiveSectionIdx] = useState(selectedSectionIdx);
+
+  const channel = addons.getChannel();
+  const entries = getEntries(fixtures);
+  const sectionNames = Object.keys(fixtures);
+
+  async function initialise(
+    initialValues: IFixturesWithSettings = {
+      fixtures: {},
+      settings: {},
     }
+  ) {
+    setFixtures(initialValues.fixtures);
+    setFixtureSettings(initialValues.settings);
+    // Initialise to first section to avoid trying to select non-existing section in the following story
+    setActiveSectionIdx(0);
   }
 
-  function handleFixtureSelect({ sectionId, variantIdx }): void {
-    channel.emit(Events.CHANGE, { fixtures, sectionId, variantIdx });
+  function getCurrentStoryState() {
+    const currentStory = storiesState[storyId] || {};
+    return parseStoryState(currentStory.query);
+  }
 
-    const sectionIdx = Object.keys(fixtures).findIndex((x) => x === sectionId);
-    const newSelection: number[] = [...fixtureSelection];
-    newSelection[sectionIdx] = variantIdx;
-    setFixtureSelection(newSelection);
+  function selectVariant(sectionIdx, variantIdx?): void {
+    setActiveSectionIdx(sectionIdx);
 
-    api.setQueryParams({
-      fixtures: `${newSelection.join(',')}:${sectionIdx}`,
+    channel.emit(Events.SELECT_FIXTURE, {
+      sectionIdx,
+      variantIdx,
     });
   }
 
-  function handleSelect(id: string) {
-    const idx = fixtureSections.findIndex((s) => s === id);
-    setSelectedSectionIdx(idx);
+  function selectSection(sectionIdx) {
+    setActiveSectionIdx(sectionIdx);
+    channel.emit(Events.SELECT_FIXTURE, {
+      sectionIdx,
+    });
   }
 
   function handlePreviewKeyDown({ event }: PreviewKeyDownEvent) {
@@ -76,85 +90,80 @@ export default function Panel() {
     // Keys 1-9 with Alt pressed
     if (altKey && keyCode >= 49 && keyCode <= 57) {
       // 0-based index of tab
-      setSelectedSectionIdx(-49 + keyCode);
+      selectSection(-49 + keyCode);
     }
     // Vim navigation: left/right to switch section tabs
     // Switch to right
-    if (key === 'l' && selectedSectionIdx < fixtureSections.length - 1) {
-      setSelectedSectionIdx(selectedSectionIdx + 1);
+    if (key === 'l' && activeSectionIdx < sectionNames.length - 1) {
+      selectSection(activeSectionIdx + 1);
     }
     // Switch to left
-    if (key === 'h' && selectedSectionIdx > 0) {
-      setSelectedSectionIdx(selectedSectionIdx - 1);
+    if (key === 'h' && activeSectionIdx > 0) {
+      selectSection(activeSectionIdx - 1);
     }
   }
 
-  useEffect(() => {
-    channel.on(Events.INIT, initialiseRemotes);
+  function handleResetSelections() {
+    channel.emit(Events.SELECT_FIXTURE, null);
+  }
 
-    if (fixtureSections.length) {
-      setSelectedSectionIdx(selectedSectionIdx);
+  useEffect(() => {
+    channel.on(Events.INIT_PANEL, initialise);
+
+    return () => {
+      channel.off(Events.INIT_PANEL, initialise);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (sectionNames.length) {
       channel.on(PREVIEW_KEYDOWN, handlePreviewKeyDown);
       document.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
-      channel.off(Events.INIT, initialiseRemotes);
-
-      if (fixtureSections.length) {
+      if (sectionNames.length) {
         document.removeEventListener('keydown', handleKeyDown);
         channel.off(PREVIEW_KEYDOWN, handlePreviewKeyDown);
       }
     };
-  }, [fixtureSections.length, selectedSectionIdx]);
+  }, [JSON.stringify(sectionNames), activeSectionIdx]);
 
-  if (!entries.length) {
-    return null;
-  }
-
-  if (entries.length === 1 && !fixtureSettings?.singleTab) {
-    const [[key, value]] = entries;
-    return renderPanelSection({
-      id: key,
-      content: value,
-      active: true,
-      onSelect: handleFixtureSelect,
+  useEffect(() => {
+    api.setQueryParams({
+      fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
     });
-  }
+  }, [activeSectionIdx, JSON.stringify(selectedVariantIdxs)]);
+
+  const createLabel = (label, key) => (
+    <StyledTabButtonContent>
+      <span className="tab-label">{label}</span>
+      {entries.length > 1 && key <= 9 && <span className="tab-label-key">alt+{key}</span>}
+    </StyledTabButtonContent>
+  );
+
+  const tabs = entries.map(([label, contents], idx) => ({
+    label: createLabel(label, idx + 1),
+    panel: (
+      <PanelSection
+        key={label}
+        active={activeSectionIdx === idx}
+        fixtureContents={contents}
+        sectionIdx={idx}
+        selectedFixtureIdx={selectedVariantIdx}
+        onSelect={selectVariant}
+      />
+    ),
+  }));
 
   return (
     <Tabs
-      id="tabbed-fixture-sections"
-      absolute
-      bordered
-      actions={{ onSelect: handleSelect }}
-      selected={fixtureSections[selectedSectionIdx]}
-    >
-      {entries.map(([k, v], idx) => (
-        <div
-          id={k}
-          key={k}
-          // @ts-ignore (title as render function. <div> is a placeholder here. The props are used to populate custom elements within Tabs)
-          title={() => (
-            <StyledTabButtonContent>
-              <span className="tab-label">{k}</span>
-              {entries.length > 1 && idx < 9 && (
-                <span className="tab-label-key">alt+{idx + 1}</span>
-              )}
-            </StyledTabButtonContent>
-          )}
-        >
-          {({ active }: { active: boolean }) =>
-            renderPanelSection({
-              id: k,
-              content: v,
-              active,
-              onSelect: handleFixtureSelect,
-            })
-          }
-        </div>
-      ))}
-    </Tabs>
+      tabs={tabs}
+      singleTab={fixtureSettings.singleTab}
+      activeIdx={activeSectionIdx}
+      onTabClick={selectSection}
+      onResetSelections={handleResetSelections}
+    />
   );
 }
 

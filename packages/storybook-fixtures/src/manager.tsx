@@ -9,7 +9,7 @@ addons.register(ADDON_ID, () => {
     title: 'Fixtures',
     render: ({ active, key }: RenderOptions) => {
       return (
-        <AddonPanel key={key} active={active}>
+        <AddonPanel key={key} active={active || false}>
           <Panel />
         </AddonPanel>
       );

@@ -33,28 +33,28 @@ export default {
   title: 'storybook-fixtures',
 };
 
-export const fixtureSections = ({ fixtures: [genus, textColor = ''] }) => ({
-  ...Card,
-  props: {
-    fixture: {
-      default: { ...genus, textColor },
-    },
-  },
-});
-fixtureSections.story = {
-  decorators: [
-    withFixtures({
-      'Panthera Genus': pantheraData,
-      colors: {
-        Red: 'red-600',
-        Green: 'green-700',
-        Blue: 'blue-600',
+export const fixtureSections = (_, { fixtures: [genus, textColor] }) => {
+  return {
+    ...Card,
+    props: {
+      fixture: {
+        default: { ...genus, textColor },
       },
-    }),
-  ],
+    },
+  };
 };
+fixtureSections.decorators = [
+  withFixtures({
+    'Panthera Genus': pantheraData,
+    colors: {
+      Red: 'red-600',
+      Green: 'green-700',
+      Blue: 'blue-600',
+    },
+  }),
+];
 
-export const collectionFixtureNoTab = ({ fixture }) => ({
+export const collectionFixtureNoTab = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -62,16 +62,14 @@ export const collectionFixtureNoTab = ({ fixture }) => ({
     },
   },
 });
-collectionFixtureNoTab.story = {
-  name: 'fixture setting: singleTab',
-  decorators: [
-    withFixtures({
-      collection: pantheraCollection,
-    }),
-  ],
-};
+collectionFixtureNoTab.storyName = 'fixture setting: singleTab';
+collectionFixtureNoTab.decorators = [
+  withFixtures({
+    collection: pantheraCollection,
+  }),
+];
 
-export const collectionFixture = ({ fixture }) => ({
+export const collectionFixture = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -79,16 +77,14 @@ export const collectionFixture = ({ fixture }) => ({
     },
   },
 });
-collectionFixture.story = {
-  decorators: [
-    withFixtures({
-      __singleTab: true,
-      collection: pantheraCollection,
-    }),
-  ],
-};
+collectionFixture.decorators = [
+  withFixtures({
+    __singleTab: true,
+    collection: pantheraCollection,
+  }),
+];
 
-export const objectFixture = ({ fixture }) => ({
+export const objectFixture = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -96,16 +92,14 @@ export const objectFixture = ({ fixture }) => ({
     },
   },
 });
-objectFixture.story = {
-  decorators: [
-    withFixtures({
-      'Panthera Genus': pantheraData,
-      'Keyed collection': keyBy(pantheraCollection, 'description'),
-    }),
-  ],
-};
+objectFixture.decorators = [
+  withFixtures({
+    'Panthera Genus': pantheraData,
+    'Keyed collection': keyBy(pantheraCollection, 'description'),
+  }),
+];
 
-export const remoteFixture = ({ fixture }) => ({
+export const remoteFixture = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -113,20 +107,18 @@ export const remoteFixture = ({ fixture }) => ({
     },
   },
 });
-remoteFixture.story = {
-  decorators: [
-    withFixtures({
-      Neofelis: {
-        'Clouded Leopard':
-          'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
-        'Sunda Clouded Leopard':
-          'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
-      },
-    }),
-  ],
-};
+remoteFixture.decorators = [
+  withFixtures({
+    Neofelis: {
+      'Clouded Leopard':
+        'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
+      'Sunda Clouded Leopard':
+        'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
+    },
+  }),
+];
 
-export const stringValueFixture = ({ fixture }) => ({
+export const stringValueFixture = (_, { fixture }) => ({
   template: `<h1 class="font-sans">{{ fixture }}</h1>`,
   props: {
     fixture: {
@@ -134,18 +126,16 @@ export const stringValueFixture = ({ fixture }) => ({
     },
   },
 });
-stringValueFixture.story = {
-  decorators: [
-    withFixtures({
-      Values: {
-        Tiger: 'Largest species of the cat family',
-        Lion: 'A large cat native to Africa and Asia',
-        Jaguar: 'A large cat native to Americas',
-        Leopard: 'A large cat native to Africa and Eurasia',
-      },
-    }),
-  ],
-};
+stringValueFixture.decorators = [
+  withFixtures({
+    Values: {
+      Tiger: 'Largest species of the cat family',
+      Lion: 'A large cat native to Africa and Asia',
+      Jaguar: 'A large cat native to Americas',
+      Leopard: 'A large cat native to Africa and Eurasia',
+    },
+  }),
+];
 
 export const noFixture = () => ({
   ...Card,
@@ -172,8 +162,6 @@ export const disabledFixture = () => ({
     },
   },
 });
-disabledFixture.story = {
-  parameters: {
-    fixtures: { disabled: true },
-  },
+disabledFixture.parameters = {
+  fixtures: { disabled: true },
 };

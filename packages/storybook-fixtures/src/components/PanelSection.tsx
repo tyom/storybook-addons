@@ -1,48 +1,27 @@
 /* global document */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@storybook/theming';
 import addons from '@storybook/addons';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
-import { TabWrapper } from '@storybook/components';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
 import { getEntries } from './Panel';
-
-interface ISelectCallback {
-  ({ sectionId: string, variantIdx: number }): void;
-}
-
-interface IPanelSection {
-  id: string;
-  content: object;
-  active: boolean;
-  onSelect: ISelectCallback;
-}
 
 interface IPanelSectionProps {
   active: boolean;
   fixtureContents: {};
-  sectionId: string;
-  selectedSectionId: string;
-  onSelect: ISelectCallback;
+  sectionIdx?: number;
+  selectedFixtureIdx: number;
+  onSelect: (sectionIdx: number, variantIdx?: number) => void;
 }
 
-const PanelSection = ({
+export default function PanelSection({
   active,
   fixtureContents,
-  sectionId,
-  selectedSectionId,
+  sectionIdx = 0,
+  selectedFixtureIdx = 0,
   onSelect,
-}: IPanelSectionProps) => {
+}: IPanelSectionProps) {
   const entries = getEntries(fixtureContents);
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  function activateVariant(idx: number): void {
-    setActiveIdx(idx);
-    onSelect({
-      sectionId,
-      variantIdx: idx,
-    });
-  }
 
   function handlePreviewKeyDown({ event }: PreviewKeyDownEvent) {
     handleKeyDown(event);
@@ -50,18 +29,22 @@ const PanelSection = ({
 
   function handleKeyDown({ key }: KeyboardEvent) {
     let keyedIndex = Number(key) - 1;
-    // Vim navigation: up/down to switch variants
+    // Vim-style navigation: up/down to switch variants
     if (['k', 'j'].includes(key)) {
-      keyedIndex = key === 'k' ? activeIdx + 1 : activeIdx - 1;
+      keyedIndex = key === 'k' ? selectedFixtureIdx + 1 : selectedFixtureIdx - 1;
     }
-
     if (keyedIndex >= 0 && keyedIndex < entries.length && keyedIndex < 10) {
-      activateVariant(keyedIndex);
+      selectVariant(keyedIndex);
     }
+  }
+
+  function selectVariant(variantIdx) {
+    onSelect(sectionIdx, variantIdx);
   }
 
   useEffect(() => {
     const channel = addons.getChannel();
+
     if (active) {
       channel.on(PREVIEW_KEYDOWN, handlePreviewKeyDown);
       document.addEventListener('keydown', handleKeyDown);
@@ -73,69 +56,42 @@ const PanelSection = ({
         document.removeEventListener('keydown', handleKeyDown);
       }
     };
-  }, [sectionId, active, activeIdx]);
+  }, [active, selectedFixtureIdx]);
 
-  useEffect(() => {
-    // activate on tab switch
-    if (active && sectionId === selectedSectionId) {
-      activateVariant(activeIdx);
-    }
-  }, [selectedSectionId]);
+  if (!active) return null;
 
   return (
-    <TabWrapper
-      active={active}
-      render={() => (
-        <FixturesMenu>
-          {entries.map(([key, value], idx) => {
-            const buttonClass = [activeIdx === idx && 'active'].filter(Boolean).join(' ');
-            const previewText = JSON.stringify(value, null, 2);
-            const previewTextTrimmed = previewText
-              ? previewText.trim().slice(0, 300)
-              : previewText;
-            const keyNumber = idx + 1;
+    <FixturesMenu>
+      {entries.map(([key, value], idx) => {
+        const buttonClass = [selectedFixtureIdx === idx && 'active']
+          .filter(Boolean)
+          .join(' ');
+        const previewText = JSON.stringify(value, null, 2);
+        const previewTextTrimmed = previewText
+          ? previewText.trim().slice(0, 300)
+          : previewText;
+        const keyNumber = idx + 1;
 
-            return (
-              <FixtureButton
-                key={key}
-                type="button"
-                className={buttonClass}
-                title={
-                  keyNumber < 10
-                    ? `Press the ${keyNumber} key to select the variant (when focused in Preview)`
-                    : undefined
-                }
-                data-id={key}
-                onClick={() => activateVariant(idx)}
-              >
-                {keyNumber < 10 && <span className="key">{keyNumber}</span>}
-                <span className="preview">{previewTextTrimmed}</span>
-                <span className="name">{key}</span>
-              </FixtureButton>
-            );
-          })}
-        </FixturesMenu>
-      )}
-    />
-  );
-};
-
-export function renderPanelSection({
-  id,
-  content,
-  active = true,
-  onSelect,
-}: IPanelSection) {
-  const selectedSectionId = active ? id : '';
-  return (
-    <PanelSection
-      key={id}
-      active={active}
-      fixtureContents={content}
-      sectionId={id}
-      selectedSectionId={selectedSectionId}
-      onSelect={onSelect}
-    />
+        return (
+          <FixtureButton
+            key={key}
+            type="button"
+            className={buttonClass}
+            title={
+              keyNumber < 10
+                ? `Press the ${keyNumber} key to select the variant (when focused in Preview)`
+                : undefined
+            }
+            data-id={key}
+            onClick={() => selectVariant(idx)}
+          >
+            {keyNumber < 10 && <span className="key">{keyNumber}</span>}
+            <span className="preview">{previewTextTrimmed}</span>
+            <span className="name">{key}</span>
+          </FixtureButton>
+        );
+      })}
+    </FixturesMenu>
   );
 }
 
@@ -160,6 +116,7 @@ const FixtureButton = styled.button`
   text-align: left;
   box-shadow: 0 1px 2px #0005;
   color: ${({ theme }) => theme.color.defaultText};
+  outline: 0;
 
   &:hover {
     filter: brightness(80%);
@@ -191,12 +148,12 @@ const FixtureButton = styled.button`
 
   .preview {
     border-radius: 0.2rem;
-    padding: 0.2rem 1.4rem 0.2rem 0.2rem;
+    padding: 0.2rem 1.8rem 0.2rem 0.2rem;
     background: #0001;
     overflow: hidden;
     white-space: pre-wrap;
     line-height: 1.2;
-    mask-image: linear-gradient(to bottom, #000a, transparent);
+    mask-image: linear-gradient(to bottom, #000a, transparent 90%);
     position: absolute;
     top: 0;
     right: 0;
@@ -205,7 +162,7 @@ const FixtureButton = styled.button`
   }
 
   .name {
-    font-size: 1.6em;
+    font-size: 1.5em;
     position: absolute;
     font-weight: 600;
     bottom: 0.2rem;

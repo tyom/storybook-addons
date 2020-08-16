@@ -1,4 +1,0 @@
-{
-  "browsers": ["chrome:headless"],
-  "appCommand": "yarn examples:serve"
-}
