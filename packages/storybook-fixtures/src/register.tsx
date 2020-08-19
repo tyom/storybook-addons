@@ -7,7 +7,8 @@ import { ADDON_ID, PANEL_ID, PARAM_KEY } from '.';
 addons.register(ADDON_ID, () => {
   addons.addPanel(PANEL_ID, {
     title: 'Fixtures',
-    render: ({ active, key }: RenderOptions) => {
+    render: ({ active = true, key }: RenderOptions) => {
+      console.log('register');
       return (
         <AddonPanel key={key} active={active || false}>
           <Panel />
