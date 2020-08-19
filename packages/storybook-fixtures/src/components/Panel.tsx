@@ -173,6 +173,7 @@ const StyledTabButtonContent = styled.span`
     margin-left: 0.5rem;
     text-transform: uppercase;
     background-color: #0002;
+    color: ${({ theme }) => theme.barTextColor};
     font-size: 9px;
     padding: 0.2rem 0.3rem;
     border-radius: 3px;

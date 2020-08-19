@@ -1,52 +1,48 @@
 /* global window */
 import React from 'react';
-import { styled } from '@storybook/theming';
+import { styled, css } from '@storybook/theming';
 import { ActionBar } from '@storybook/components';
 
-const Container = styled.div({
-  width: '100%',
-  position: 'relative',
-  minHeight: '100%',
-});
+const Container = styled.div`
+  width: 100%;
+  position: relative;
+  min-height: 100%;
+`;
 
-const Item = styled.button<{ active?: boolean }>(
-  ({ theme }) => ({
-    textDecoration: 'none',
-    padding: '10px 15px',
-    cursor: 'pointer',
-    fontWeight: theme.typography.weight.bold,
-    fontSize: theme.typography.size.s2 - 1,
-    lineHeight: 1,
-    height: 40,
-    color: theme.barTextColor,
-    border: 'none',
-    borderTop: '3px solid transparent',
-    borderBottom: '3px solid transparent',
-    background: 'transparent',
+const Item = styled.button<{ active?: boolean }>`
+  text-decoration: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: ${({ theme }) => theme.typography.weight.bold};
+  font-size: ${({ theme }) => theme.typography.size.s2 - 1};
+  color: ${({ theme }) => theme.barTextColor};
+  line-height: 1;
+  height: 40px;
+  border: none;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  background: transparent;
 
-    '&:focus': {
-      outline: '0 none',
-      borderBottom: `3px solid ${theme.color.secondary}`,
-    },
-  }),
-  ({ active, theme }) =>
-    active
-      ? {
-          opacity: 1,
-          borderBottom: `3px solid ${theme.color.secondary}`,
-        }
-      : {}
-);
+  &:focus {
+    outline: 0 none;
+    border-bottom: 3px solid ${({ theme }) => theme.color.secondary};
+  }
 
-const TabsWrapper = styled.div({});
+  ${({ active, theme }) =>
+    active &&
+    css`
+      color: ${theme.color.secondary};
+      border-bottom: 3px solid ${theme.color.secondary};
+    `}
+`;
 
-const List = styled.div<{}>(({ theme }) => ({
-  boxShadow: `${theme.appBorderColor} 0 -1px 0 0 inset`,
-  background: 'rgba(0, 0, 0, .05)',
-  display: 'flex',
-  justifyContent: 'space-between',
-  whiteSpace: 'nowrap',
-}));
+const List = styled.div`
+  box-shadow: ${({ theme }) => theme.appBorderColor} 0 -1px 0 0 inset;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+`;
 
 interface TabsProps {
   activeIdx: number;
@@ -73,11 +69,12 @@ export const Tabs: React.FC<TabsProps> = ({
       onClick: onResetSelections,
     },
   ];
+
   return (
     <Container>
       {showTabs && (
         <List>
-          <TabsWrapper className="fixture-section-tabs">
+          <div className="fixture-section-tabs">
             {tabs.map((tab, idx) => (
               <Item
                 /* eslint-disable-next-line react/no-array-index-key */
@@ -88,7 +85,7 @@ export const Tabs: React.FC<TabsProps> = ({
                 {tab.label}
               </Item>
             ))}
-          </TabsWrapper>
+          </div>
         </List>
       )}
       {tabs[activeIdx]?.panel}
