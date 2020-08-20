@@ -15,18 +15,19 @@ npm install -D storybook-fixtures
 ```
 
 Add `storybook-fixtures` to your addons list in `.storybook/main.js`
+
 ```js
 module.exports = {
-  addons: ['storybook-fixtures']
+  addons: ['storybook-fixtures'],
 };
 ```
 
 A new 'Fixtures' panel will appear which contains fixture sections as sub tabs.
 Fixture sections contain fixture variants which can be toggled by clicking or
-keyboard shortcuts - keys `1` to `9` correspond to the first 9 variants. 
+keyboard shortcuts - keys `1` to `9` correspond to the first 9 variants.
 
 Variants can also be switched in sequentially using Vim-style navigation keys:
-`j` and `k` to go up and down the variant list. 
+`j` and `k` to go up and down the variant list.
 
 Section tabs can be switched using `h` and `l` to switch to left and right
 tab respectively.
@@ -64,27 +65,36 @@ export const myRemoteFixture = ({ fixture }) => {
   return <MyComponent data={fixture} />;
 };
 // Fixtures can be added per story via story parameters
-myRemoteFixture.story = {
-  parameters: {
-    fixtures: {
-      // fixture sections (key is label)
-      variantTypes: {
-        // variants (key is label)
-        'Text fixture': 'Lorem ipsum',
-        'Array fixture': ['One', 'Two'],
-        'Object fixture': {
-          title: 'Tiger',
-          description: 'Largest species of the cat family',
-        },
-        'My remote fixture': 'https://example.com/data.json'
-      }
-    }  
-  }
-}
-``` 
+myRemoteFixture.parameters = {
+  fixtures: {
+    // fixture sections (key is a tab label for multiple variant sets)
+    variantTypes: {
+      // variants (key is label)
+      'Text fixture': 'Lorem ipsum',
+      'Array fixture': ['One', 'Two'],
+      'Object fixture': {
+        title: 'Tiger',
+        description: 'Largest species of the cat family',
+      },
+      'My remote fixture': 'https://example.com/data.json',
+    },
+  },
+};
+```
 
-Each variant value can be be a URL, in which case it'll be fetched and
+Variants can be grouped into sets and controlled independently. When only one
+set is defined the set tab is hidden.
+
+Any selections are stored in local storage and any fixture selections can be
+opened in a new tab in isolation (without Storybook UI). The selection is encoded
+in a query string. 
+
+Each variant value can be a URL, in which case it'll be fetched, and
 the result returned as its value.
+
+In Storybook v6 the add-on automatically includes the fixtures decorator globally.
+Just add `storybook-fixtures` to the `addons` array in `main.js` and any story
+can receive fixtures object using `parameters` static property (see above). 
 
 ### Fixture Settings
 
@@ -92,8 +102,8 @@ the result returned as its value.
 These properties can change certain behaviour of how fixtures are displayed.
 
 - `__singleTab` (defaults to `false`) - Fixtures are grouped into multiple tabs. Each key
-in the fixtures object is mapped to the tab. When there's only a single property in the
-fixture object the single tab is not shown by default. 
+  in the fixtures object is mapped to the tab. When there's only a single property in the
+  fixture object the single tab is not shown by default.
 
 ## Imports
 
