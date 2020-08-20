@@ -23,6 +23,30 @@ interface IFixturesWithSettings {
   settings: IFixtureSettings;
 }
 
+const fixtureExample = `
+myStory.parameters = {
+  fixtures: {
+    'Section name (tab)': {
+      'Variant name': {
+         // fixture data
+       }
+    }
+  }
+}
+`.trim();
+
+function EmptyPlaceholder() {
+  return (
+    <Placeholder>
+      <div className="content">
+        <h3>No fixtures</h3>
+        <p>Add story fixtures using `fixtures` story parameter.</p>
+        <code>{fixtureExample}</code>
+      </div>
+    </Placeholder>
+  );
+}
+
 export function getEntries(obj = {}) {
   if (Array.isArray(obj)) {
     return obj.map((x, i) => [`Variant ${i + 1}`, x]);
@@ -44,21 +68,24 @@ export default function Panel() {
 
   const selectedVariantIdx = selectedVariantIdxs[selectedSectionIdx];
   const [activeSectionIdx, setActiveSectionIdx] = useState(selectedSectionIdx);
+  const [initialisedValues, setInitialisedValues] = useState(false);
 
   const channel = addons.getChannel();
   const entries = getEntries(fixtures);
   const sectionNames = Object.keys(fixtures);
 
-  async function initialise(
-    initialValues: IFixturesWithSettings = {
-      fixtures: {},
-      settings: {},
+  async function initialise(initialValues?: IFixturesWithSettings | null) {
+    if (!initialValues) {
+      setFixtures({});
+      setFixtureSettings({});
+      setInitialisedValues(false);
+      return;
     }
-  ) {
     setFixtures(initialValues.fixtures);
     setFixtureSettings(initialValues.settings);
     // Initialise to first section to avoid trying to select non-existing section in the following story
     setActiveSectionIdx(0);
+    setInitialisedValues(true);
   }
 
   function getCurrentStoryState() {
@@ -156,6 +183,14 @@ export default function Panel() {
     ),
   }));
 
+  if (initialisedValues && tabs.length === 0) {
+    return <EmptyPlaceholder />;
+  }
+
+  if (tabs.length === 0) {
+    return null;
+  }
+
   return (
     <Tabs
       tabs={tabs}
@@ -167,12 +202,39 @@ export default function Panel() {
   );
 }
 
+const Placeholder = styled.div`
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+
+  .content {
+    border: 2px solid #aaa3;
+    padding: 2rem;
+    margin: 1rem auto;
+  }
+
+  h3 {
+    font-weight: 600;
+    font-size: 1.4em;
+  }
+
+  code {
+    white-space: pre;
+    padding: 1rem;
+    background-color: #0001;
+    display: block;
+    margin: 0 -1rem -1rem -1rem;
+  }
+`;
+
 const StyledTabButtonContent = styled.span`
   .tab-label-key {
     display: inline-block;
     margin-left: 0.5rem;
     text-transform: uppercase;
     background-color: #0002;
+    color: ${({ theme }) => theme.barTextColor};
     font-size: 9px;
     padding: 0.2rem 0.3rem;
     border-radius: 3px;

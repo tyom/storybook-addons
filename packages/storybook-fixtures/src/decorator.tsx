@@ -84,7 +84,7 @@ export const withFixtures = makeDecorator({
 
       return () => {
         channel.off(Events.SELECT_FIXTURE, updateLocalState);
-        // Unset fixtures to avoid the next story
+        // Unset fixtures to avoid it persisting to the next story
         channel.emit(Events.INIT_PANEL);
       };
     }, []);
