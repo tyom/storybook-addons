@@ -34,66 +34,66 @@ export default {
 export const fixtureSections = (_, { fixtures: [genus, textColor = ''] }) =>
   renderTemplate(genus, textColor);
 
-fixtureSections.decorators = [
-  withFixtures({
+fixtureSections.parameters = {
+  fixtures: {
     'Panthera Genus': pantheraData,
     colors: {
       Red: 'red-600',
       Green: 'green-700',
       Blue: 'blue-600',
     },
-  }),
-];
+  },
+};
 
 export const collectionFixtureNoTab = (_, { fixture }) => renderTemplate(fixture);
 collectionFixtureNoTab.storyName = 'fixture setting: singleTab';
-collectionFixtureNoTab.decorators = [
-  withFixtures({
+collectionFixtureNoTab.parameters = {
+  fixtures: {
     collection: pantheraCollection,
-  }),
-];
+  },
+};
 
 export const collectionFixture = (_, { fixture }) => renderTemplate(fixture);
-collectionFixture.decorators = [
-  withFixtures({
+collectionFixture.parameters = {
+  fixtures: {
     __singleTab: true,
     collection: pantheraCollection,
-  }),
-];
+  },
+};
 
 export const objectFixture = (_, { fixture }) => renderTemplate(fixture);
-objectFixture.decorators = [
-  withFixtures({
+objectFixture.parameters = {
+  fixtures: {
     'Panthera Genus': pantheraData,
     'Keyed collection': keyBy(pantheraCollection, 'description'),
-  }),
-];
+  },
+};
 
 export const remoteFixture = (_, { fixture }) => renderTemplate(fixture);
-remoteFixture.decorators = [
-  withFixtures({
+remoteFixture.parameters = {
+  fixtures: {
     Neofelis: {
       'Clouded Leopard':
         'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
       'Sunda Clouded Leopard':
         'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
     },
-  }),
-];
+  },
+};
 
 export const stringValueFixture = (_, { fixture }) =>
   `<h1 class="font-sans">${fixture}</h1>`;
 
-stringValueFixture.decorators = [
-  withFixtures({
+stringValueFixture.parameters = {
+  fixtures: {
     Values: {
       Tiger: 'Largest species of the cat family',
       Lion: 'A large cat native to Africa and Asia',
       Jaguar: 'A large cat native to Americas',
       Leopard: 'A large cat native to Africa and Eurasia',
     },
-  }),
-];
+  },
+};
 
 export const noFixture = () => {
   return renderTemplate({
