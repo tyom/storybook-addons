@@ -270,6 +270,7 @@ environmentUseCases.forEach(({ urlPath, fixtureName }) => {
 
     await t.expect(page.panelTabs.find('button').withText('Fixtures').exists).ok();
     await t.expect(page.fixtureTabs.find('button').exists).notOk();
+    await t.expect(Selector('#panel-tab-content h3').withText('No fixtures').exists).ok();
   });
 
   test('Disabled fixtures panel', async (t) => {
