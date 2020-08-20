@@ -1,13 +1,13 @@
 {
   "name": "html-example",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.8.1",
   "scripts": {
     "storybook": "start-storybook -p 6008 --ci -s ../__fixtures__",
     "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/html"
   },
   "dependencies": {
-    "storybook-fixtures": "^0.8.0",
+    "storybook-fixtures": "^0.8.1",
     "tailwindcss": "^1.4.6"
   },
   "devDependencies": {
