@@ -74,9 +74,9 @@ remoteFixture.parameters = {
   fixtures: {
     Neofelis: {
       'Clouded Leopard':
-        'https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
+        'fetch::https://en.wikipedia.org/api/rest_v1/page/summary/Clouded_leopard',
       'Sunda Clouded Leopard':
-        'https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
+        'fetch::https://en.wikipedia.org/api/rest_v1/page/summary/Sunda_clouded_leopard',
     },
   },
 };

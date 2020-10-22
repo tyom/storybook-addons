@@ -17,7 +17,9 @@ export const withFixtures = makeDecorator({
     { options = {}, parameters = {} }
   ) => {
     const channel = addons.getChannel();
-    const urlQuery: SelectionUrlQuery = qs.parse(window.location.search);
+    const urlQuery: SelectionUrlQuery = qs.parse(window.location.search, {
+      ignoreQueryPrefix: true,
+    });
 
     const fixturesInput = {
       ...options,
@@ -79,6 +81,14 @@ export const withFixtures = makeDecorator({
     }
 
     useEffect(() => {
+      const isRemote =
+        typeof activeVariant === 'string' && activeVariant.startsWith('fetch::');
+      // In isolated iframe view. State is restored from encoded fixtures query
+      // Except for remote fetches. Those need to be done in the initialisation phase.
+      if (urlQuery.fixtures && !isRemote) {
+        return undefined;
+      }
+
       initialise();
       channel.on(Events.SELECT_FIXTURE, updateLocalState);
 
