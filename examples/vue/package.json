@@ -12,12 +12,13 @@
     "vue": "^2.6.11"
   },
   "devDependencies": {
-    "@storybook/addon-storysource": "^6.0.16",
-    "@storybook/addons": "^6.0.16",
-    "@storybook/theming": "^6.0.16",
-    "@storybook/vue": "^6.0.16",
+    "@storybook/addon-storysource": "^6.0.26",
+    "@storybook/addons": "^6.0.26",
+    "@storybook/theming": "^6.0.26",
+    "@storybook/vue": "^6.0.26",
     "babel-preset-vue": "^2.0.2",
+    "eslint-plugin-vue": "^7.1.0",
     "vue-loader": "^15.9.3",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12"
   }
 }
