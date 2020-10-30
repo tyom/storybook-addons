@@ -1,4 +1,4 @@
-import { withFixtures, keyBy } from 'storybook-fixtures';
+import { keyBy } from 'storybook-fixtures';
 import 'tailwindcss/dist/utilities.css';
 import pantheraData from '../__fixtures__/panthera.json';
 
