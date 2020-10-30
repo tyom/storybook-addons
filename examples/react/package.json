@@ -1,7 +1,7 @@
 {
   "name": "react-example",
   "private": true,
-  "version": "0.8.3",
+  "version": "0.8.4",
   "scripts": {
     "storybook": "start-storybook -p 6006 --ci -s ../__fixtures__",
     "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/react"
@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "storybook-fixtures": "^0.8.3",
+    "storybook-fixtures": "^0.8.4",
     "tailwindcss": "^1.4.6"
   },
   "devDependencies": {
