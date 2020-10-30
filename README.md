@@ -11,4 +11,7 @@
 ## Add-ons
 
 - [**storybook-fixtures**](./packages/storybook-fixtures)  
-  Map local and remote data fixtures to knob selectors (radio/select), making it easier to create variations for components. 
+  Add data fixtures to your components by using local data (JSON files or hardcoded) or even URLs to fetch the data from. 
+
+- [**storybook-react-context**](./packages/storybook-react-context)  
+  Manipulate React context inside Storybook. Read state and dispatch updates from outside of React component. 
