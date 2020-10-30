@@ -28,7 +28,6 @@ export const withFixtures = makeDecorator({
 
     const { fixtures: initialFixtures, settings } = processInput(fixturesInput);
     const [fixtures, setFixtures] = useState(initialFixtures);
-    const [initialised, setInitialised] = useState(false);
     const [localState, setLocalState] = useState(
       JSON.parse(window.localStorage.getItem(ADDON_ID) || '{}')
     );
@@ -46,17 +45,6 @@ export const withFixtures = makeDecorator({
     });
 
     const selectedVariantIdxsRef = useRef(selectedVariantIdxs);
-
-    async function initialise() {
-      try {
-        const resolvedFixtures = await fetchRemotes(fixtures);
-        setFixtures(resolvedFixtures);
-        setInitialised(true);
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Some requests have failed.', err);
-      }
-    }
 
     function getStoryQuery(sectionIdx, variantIdx?) {
       const variantIdxs: number[] = selectedVariantIdxsRef.current;
@@ -89,7 +77,22 @@ export const withFixtures = makeDecorator({
         return undefined;
       }
 
-      initialise();
+      if (isRemote) {
+        fetchRemotes(fixtures).then((resolvedFixtures) => {
+          setFixtures(resolvedFixtures);
+
+          channel.emit(Events.INIT_PANEL, {
+            fixtures: resolvedFixtures,
+            settings,
+          });
+        });
+      } else {
+        channel.emit(Events.INIT_PANEL, {
+          fixtures,
+          settings,
+        });
+      }
+
       channel.on(Events.SELECT_FIXTURE, updateLocalState);
 
       return () => {
@@ -98,15 +101,6 @@ export const withFixtures = makeDecorator({
         channel.emit(Events.INIT_PANEL);
       };
     }, []);
-
-    useEffect(() => {
-      if (initialised) {
-        channel.emit(Events.INIT_PANEL, {
-          fixtures,
-          settings,
-        });
-      }
-    }, [initialised]);
 
     useEffect(() => {
       writeStorage(ADDON_ID, localState);
