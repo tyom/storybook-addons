@@ -2,7 +2,7 @@
 
 Manipulate React context inside Storybook. Read state and dispatch updates from outside of React component.
 
-[![React examples](https://img.shields.io/badge/react-blueviolet?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/react)
+[![React examples](https://img.shields.io/badge/react-blueviolet?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/react/?path=/story/storybook-react-context)
 
 ## Install
 

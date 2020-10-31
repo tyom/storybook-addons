@@ -2,9 +2,9 @@
 
 Add data fixtures to your components by using local data (JSON files or hardcoded) or even URLs to fetch the data from.
 
-[![React examples](https://img.shields.io/badge/react-blueviolet?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/react)
-[![Vue examples](https://img.shields.io/badge/vue-brightgreen?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/vue)
-[![HTML examples](https://img.shields.io/badge/html-blue?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/html)
+[![React examples](https://img.shields.io/badge/react-blueviolet?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/react/?path=/story/storybook-fixtures)
+[![Vue examples](https://img.shields.io/badge/vue-brightgreen?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/vue/?path=/story/storybook-fixtures)
+[![HTML examples](https://img.shields.io/badge/html-blue?style=for-the-badge&logo=storybook&label=examples)](https://tyom.github.io/storybook-addons/html/?path=/story/storybook-fixtures)
 
 ![storybook-fixtures screenshot](https://raw.githubusercontent.com/tyom/storybook-addons/master/docs/storybook-fixtures.png)
 
