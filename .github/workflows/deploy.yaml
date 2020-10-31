@@ -1,11 +1,8 @@
 name: Deployer
 on:
-  push:
-    branches:
-      - master
-    tags-ignore:
-      - '*.*'
-
+  create:
+    tags:
+      - v*
 jobs:
   deploy:
     name: build and deploy
