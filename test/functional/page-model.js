@@ -11,11 +11,11 @@ class Page {
     );
   }
 
-  assertTextInPreview(selector, expectedText) {
+  assertTextInPreview(selector, expectedText, assertionOptions) {
     return t
       .switchToIframe('#storybook-preview-iframe')
       .expect(Selector(selector).innerText)
-      .eql(expectedText)
+      .eql(expectedText, assertionOptions)
       .switchToMainWindow();
   }
 
@@ -24,6 +24,13 @@ class Page {
       .switchToIframe('#storybook-preview-iframe')
       .expect(Selector(selector).hasClass(className))
       .eql(true)
+      .switchToMainWindow();
+  }
+
+  clickInPreview(selector) {
+    return t
+      .switchToIframe('#storybook-preview-iframe')
+      .click(selector)
       .switchToMainWindow();
   }
 

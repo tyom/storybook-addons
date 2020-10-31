@@ -1,0 +1,40 @@
+{
+  "name": "storybook-react-context",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "del dist && tsc",
+    "watch": "del dist && tsc --watch"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "@storybook/addons": "^6.0.26"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "*.js",
+    "*.d.ts"
+  ],
+  "keywords": [
+    "react",
+    "react-storybook",
+    "addon",
+    "context"
+  ],
+  "homepage": "https://github.com/tyom/storybook-addons/tree/master/packages/storybook-react-context",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tyom/storybook-addons.git",
+    "directory": "packages/storybook-react-context"
+  },
+  "bugs": {
+    "url": "https://github.com/tyom/storybook-addons/issues"
+  },
+  "author": {
+    "name": "Tyom Semonov",
+    "email": "mail@tyom.net"
+  },
+  "license": "MIT"
+}
