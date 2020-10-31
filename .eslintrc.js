@@ -1,11 +1,6 @@
 module.exports = {
   extends: ['@storybook/eslint-config-storybook'],
-  rules: {
-    'import/no-extraneous-dependencies': [
-      'error',
-      { devDependencies: ['test/**/*.js', '**/*.test.js'] },
-    ],
-  },
+  rules: {},
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx', '**/*.stories.js'],
@@ -14,10 +9,11 @@ module.exports = {
       },
     },
     {
-      files: ['test/**/*.js'],
+      files: ['test/**/*.js', '**/*.test.js'],
       rules: {
         'jest/expect-expect': 'off',
         'jest/no-test-callback': 'off',
+        'import/no-extraneous-dependencies': 'off',
       },
     },
   ],
