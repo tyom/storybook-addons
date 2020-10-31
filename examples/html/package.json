@@ -7,7 +7,7 @@
     "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/html"
   },
   "dependencies": {
-    "storybook-fixtures": "^0.8.5",
+    "storybook-fixtures": "^0.8.6",
     "tailwindcss": "^1.9.6"
   },
   "devDependencies": {
