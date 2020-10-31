@@ -1,6 +1,6 @@
 {
   "name": "storybook-react-context",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -8,8 +8,8 @@
     "watch": "del dist && tsc --watch"
   },
   "dependencies": {
-    "react": "^17.0.1",
-    "@storybook/addons": "^6.0.26"
+    "@storybook/addons": "^6.0.26",
+    "react": "^17.0.1"
   },
   "files": [
     "dist/**/*",
