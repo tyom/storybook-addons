@@ -50,7 +50,7 @@ export default {
   decorators: [withReactContext],
 };
 
-export const changeContextOnMount = (_, { context: { state, dispatch } }) => {
+export const changeContextOnMount = (_, { context: [state, dispatch] }) => {
   React.useEffect(() => {
     setTimeout(() => {
       dispatch({
@@ -77,7 +77,7 @@ changeContextOnMount.parameters = {
   },
 };
 
-export const changeContextOnClick = (_, { context: { state, dispatch } }) => {
+export const changeContextOnClick = (_, { context: [state, dispatch] }) => {
   function handleButtonToggle() {
     dispatch({
       color: getNextColor(state.color),

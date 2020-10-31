@@ -41,12 +41,13 @@ someComponent.parameters = {
 ```
 
 Component will be wrapped with another component which uses the context hook and returns
-it to the story via story context.
+it to the story via story context as the result of `React.useReducer` with `reducer`
+function and `initialState`.
 
 ```js
 import { withReactContext } from 'storybook-react-context';
 
-export const myStory = (_, { context: { state, dispatch } }) => (
+export const myStory = (_, { context: [state, dispatch] }) => (
   <button onClick={() => dispatch({ text: 'Changed' })}>{state.text}</button>
 );
 myStory.decorators = [withReactContext];

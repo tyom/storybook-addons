@@ -35,10 +35,8 @@ export const withReactContext = makeDecorator({
     const ReactContext = options?.context || DefaultContext;
     const reducer = options?.reducer || defaultReducer;
 
-    const [state, dispatch] = React.useReducer(reducer, parameters);
-
     return (
-      <ReactContext.Provider value={{ state, dispatch }}>
+      <ReactContext.Provider value={React.useReducer(reducer, parameters)}>
         <ContextWrapper context={ReactContext}>
           {(ctx) =>
             storyFn({
