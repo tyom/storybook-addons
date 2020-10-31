@@ -45,7 +45,7 @@ environmentUseCases.forEach(({ urlPath, fixtureName }) => {
     .meta(
       'target',
       fixtureName.toLowerCase()
-    )(fixtureName)
+    )(`storybook-fixtures ${fixtureName}`)
     .page(BASE_URL + urlPath);
 
   test('Fixture Sections', async (t) => {
