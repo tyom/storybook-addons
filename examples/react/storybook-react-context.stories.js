@@ -47,7 +47,13 @@ const getNextColor = (currentColor) => {
 
 export default {
   title: 'storybook-react-context',
-  decorators: [withReactContext],
+  decorators: [
+    withReactContext({
+      initialState: {
+        color: 'blue-400',
+      },
+    }),
+  ],
 };
 
 export const changeContextOnMount = (_, { context: [state, dispatch] }) => {
@@ -69,12 +75,6 @@ export const changeContextOnMount = (_, { context: [state, dispatch] }) => {
       </p>
     </Component>
   );
-};
-changeContextOnMount.parameters = {
-  initialState: {
-    loaded: false,
-    color: 'blue-400',
-  },
 };
 
 export const changeContextOnClick = (_, { context: [state, dispatch] }) => {
@@ -99,6 +99,5 @@ export const changeContextOnClick = (_, { context: [state, dispatch] }) => {
 changeContextOnClick.parameters = {
   initialState: {
     loaded: true,
-    color: 'blue-400',
   },
 };

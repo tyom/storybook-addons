@@ -25,12 +25,13 @@ export default {
 
 ### Options
 
-`withReactContext` takes an argument which is an object with two keys (both optional):
+`withReactContext` takes an argument which is an object with the following optional keys:
 
 - `context` - custom context returned by `React.createContext`
 - `reducer` - custom reducer (defaults to a simple assignment of dispatch action on the current state)
+- `initialState` - initial state to use in useReducer for context provider value
 
-Initial context state can be set in parameters using `initialState` key:
+Initial context state can also be set in parameters using `initialState` key:
 
 ```js
 someComponent.parameters = {
@@ -39,6 +40,10 @@ someComponent.parameters = {
   },
 };
 ```
+
+When both `initialState` values (in decorator argument and parameters) are objects
+they are combined (assigned), otherwise the either `initialState` in parameters or
+decorator argument will be used (in that order).
 
 Component will be wrapped with another component which uses the context hook and returns
 it to the story via story context as the result of `React.useReducer` with `reducer`
@@ -50,10 +55,14 @@ import { withReactContext } from 'storybook-react-context';
 export const myStory = (_, { context: [state, dispatch] }) => (
   <button onClick={() => dispatch({ text: 'Changed' })}>{state.text}</button>
 );
-myStory.decorators = [withReactContext];
+myStory.decorators = [withReactContext({
+  initialState: {
+    title: 'Initial #1'
+  }
+})];
 myStory.parameters.initialState = {
   initialState: {
-    text: 'Initial',
+    text: 'Initial #2',
   },
 };
 ```

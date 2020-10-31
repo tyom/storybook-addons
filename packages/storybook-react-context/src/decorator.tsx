@@ -1,5 +1,6 @@
 /* global window */
 import React from 'react';
+import { isPlainObject } from 'is-plain-object';
 import { makeDecorator, StoryContext } from '@storybook/addons';
 import { ADDON_ID, PARAM_KEY } from '.';
 
@@ -34,9 +35,17 @@ export const withReactContext = makeDecorator({
     }
     const ReactContext = options?.context || DefaultContext;
     const reducer = options?.reducer || defaultReducer;
+    const initialState =
+      isPlainObject(options?.initialState) && isPlainObject(parameters)
+        ? {
+            ...options.initialState,
+            ...parameters,
+          }
+        : parameters || options?.initialState;
+    const providerValue = React.useReducer(reducer, initialState);
 
     return (
-      <ReactContext.Provider value={React.useReducer(reducer, parameters)}>
+      <ReactContext.Provider value={providerValue}>
         <ContextWrapper context={ReactContext}>
           {(ctx) =>
             storyFn({
