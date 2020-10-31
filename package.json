@@ -22,7 +22,9 @@
     "examples:build": "lerna run build-storybook",
     "examples:serve": "http-server examples/build -p 5000",
     "prepare": "yarn build",
-    "prepublishOnly": " yarn test"
+    "prepublishOnly": " yarn test",
+    "lerna:version": "lerna version --no-private",
+    "lerna:publish": "lerna publish --no-private"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
