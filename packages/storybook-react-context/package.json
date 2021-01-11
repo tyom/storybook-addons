@@ -8,7 +8,7 @@
     "watch": "del dist && tsc --watch"
   },
   "dependencies": {
-    "@storybook/addons": "^6.0.26",
+    "@storybook/addons": "^6.1.11",
     "is-plain-object": "^5.0.0",
     "react": "^17.0.1"
   },
