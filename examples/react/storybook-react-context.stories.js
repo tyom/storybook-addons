@@ -33,7 +33,7 @@ const Component = ({ children, color, loading, onClick }) => (
 
 const getNextColor = (currentColor) => {
   const colors = [
-    'teal-400',
+    'red-400',
     'green-400',
     'blue-400',
     'yellow-600',
