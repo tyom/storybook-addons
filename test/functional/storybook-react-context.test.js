@@ -5,7 +5,7 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
 const getUrlPath = (path = '') =>
   BASE_URL + (BASE_URL.includes(':6006') ? '' : '/react') + path;
 
-fixture.only('storybook-react-context').meta({ target: 'react' }).page(getUrlPath());
+fixture('storybook-react-context').meta({ target: 'react' }).page(getUrlPath());
 
 test('React context is set on mount', async (t) => {
   await t.click('#storybook-react-context');
