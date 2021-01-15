@@ -1,6 +1,6 @@
 {
   "name": "storybook-react-context",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
