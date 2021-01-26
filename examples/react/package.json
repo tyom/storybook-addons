@@ -9,14 +9,14 @@
   "dependencies": {
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "storybook-fixtures": "^0.8.6",
-    "storybook-react-context": "^0.2.2",
+    "storybook-fixtures": "latest",
+    "storybook-react-context": "latest",
     "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
-    "@storybook/addon-storysource": "^6.1.11",
-    "@storybook/addons": "^6.1.11",
-    "@storybook/react": "^6.1.11",
-    "@storybook/theming": "^6.1.11"
+    "@storybook/addon-storysource": "^6.1.15",
+    "@storybook/addons": "^6.1.15",
+    "@storybook/react": "^6.1.15",
+    "@storybook/theming": "^6.1.15"
   }
 }

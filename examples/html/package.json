@@ -7,13 +7,13 @@
     "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/html"
   },
   "dependencies": {
-    "storybook-fixtures": "^0.8.6",
+    "storybook-fixtures": "latest",
     "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
-    "@storybook/addon-storysource": "^6.1.11",
-    "@storybook/addons": "^6.1.11",
-    "@storybook/html": "^6.1.11",
-    "@storybook/theming": "^6.1.11"
+    "@storybook/addon-storysource": "^6.1.15",
+    "@storybook/addons": "^6.1.15",
+    "@storybook/html": "^6.1.15",
+    "@storybook/theming": "^6.1.15"
   }
 }
