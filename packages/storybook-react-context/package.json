@@ -22,7 +22,9 @@
     "react",
     "react-storybook",
     "addon",
-    "context"
+    "context",
+    "storybook-addon",
+    "data-state"
   ],
   "homepage": "https://github.com/tyom/storybook-addons/tree/master/packages/storybook-react-context",
   "repository": {
@@ -37,5 +39,6 @@
     "name": "Tyom Semonov",
     "email": "mail@tyom.net"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "description": "Manipulate React context inside Storybook. Read state and dispatch updates from outside of React component."
 }
