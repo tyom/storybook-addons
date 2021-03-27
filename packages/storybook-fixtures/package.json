@@ -37,7 +37,9 @@
     "react-storybook",
     "vue-storybook",
     "addon",
-    "fixtures"
+    "fixtures",
+    "storybook-addon",
+    "test"
   ],
   "homepage": "https://github.com/tyom/storybook-addons/tree/master/packages/storybook-fixtures",
   "repository": {
@@ -53,5 +55,6 @@
     "email": "mail@tyom.net"
   },
   "license": "MIT",
-  "gitHead": "a75808620d35a4ce3950adf311bc951d889684b0"
+  "gitHead": "a75808620d35a4ce3950adf311bc951d889684b0",
+  "description": "Add data fixtures to your components by using local data (JSON files or hardcoded) or even URLs to fetch the data from."
 }
