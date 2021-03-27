@@ -8,12 +8,12 @@
   },
   "dependencies": {
     "storybook-fixtures": "latest",
-    "tailwindcss": "^2.0.2"
+    "tailwindcss": "^2.0.4"
   },
   "devDependencies": {
-    "@storybook/addon-storysource": "^6.1.15",
-    "@storybook/addons": "^6.1.15",
-    "@storybook/html": "^6.1.15",
-    "@storybook/theming": "^6.1.15"
+    "@storybook/addon-storysource": "^6.1.21",
+    "@storybook/addons": "^6.1.21",
+    "@storybook/html": "^6.1.21",
+    "@storybook/theming": "^6.1.21"
   }
 }

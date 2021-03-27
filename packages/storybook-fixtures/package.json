@@ -9,15 +9,15 @@
   },
   "dependencies": {
     "@rehooks/local-storage": "2.4.0",
-    "@storybook/addons": "^6.1.11",
-    "@storybook/api": "^6.1.11",
-    "@storybook/client-api": "^6.1.15",
-    "@storybook/components": "^6.1.15",
-    "@storybook/core-events": "^6.1.15",
-    "@storybook/theming": "^6.1.15",
-    "cross-fetch": "^3.0.6",
-    "lodash": "^4.17.20",
-    "qs": "^6.9.4"
+    "@storybook/addons": "^6.1.21",
+    "@storybook/api": "^6.1.21",
+    "@storybook/client-api": "^6.1.21",
+    "@storybook/components": "^6.1.21",
+    "@storybook/core-events": "^6.1.21",
+    "@storybook/theming": "^6.1.21",
+    "cross-fetch": "^3.1.2",
+    "lodash": "^4.17.21",
+    "qs": "^6.10.1"
   },
   "devDependencies": {
     "fetch-mock-jest": "^1.5.1"
