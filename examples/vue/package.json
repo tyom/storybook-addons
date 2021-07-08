@@ -8,17 +8,17 @@
   },
   "dependencies": {
     "storybook-fixtures": "latest",
-    "tailwindcss": "^2.0.4",
-    "vue": "^2.6.12"
+    "tailwindcss": "^2.2.4",
+    "vue": "^2.6.14"
   },
   "devDependencies": {
-    "@storybook/addon-storysource": "^6.1.21",
-    "@storybook/addons": "^6.1.21",
-    "@storybook/theming": "^6.1.21",
-    "@storybook/vue": "^6.1.21",
+    "@storybook/addon-storysource": "^6.3.4",
+    "@storybook/addons": "^6.3.4",
+    "@storybook/theming": "^6.3.4",
+    "@storybook/vue": "^6.3.4",
     "babel-preset-vue": "^2.0.2",
-    "eslint-plugin-vue": "^7.8.0",
+    "eslint-plugin-vue": "^7.13.0",
     "vue-loader": "^15.9.6",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.14"
   }
 }
