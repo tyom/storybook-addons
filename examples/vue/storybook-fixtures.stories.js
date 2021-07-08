@@ -163,5 +163,5 @@ export const disabledFixture = () => ({
   },
 });
 disabledFixture.parameters = {
-  fixtures: { disabled: true },
+  fixtures: { disable: true },
 };
