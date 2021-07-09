@@ -157,10 +157,12 @@ export default function Panel() {
   }, [JSON.stringify(sectionNames), activeSectionIdx]);
 
   useEffect(() => {
+    // Only react to the changes in the UI
+    if (!initialisedValues) return;
     api.setQueryParams({
       fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
     });
-  }, [activeSectionIdx, JSON.stringify(selectedVariantIdxs)]);
+  }, [activeSectionIdx, selectedVariantIdxs.join('-')]);
 
   const createLabel = (label, key) => (
     <StyledTabButtonContent>

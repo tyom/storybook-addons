@@ -1,6 +1,6 @@
 /* global window */
 import qs from 'qs';
-import { useEffect, useState, useRef } from '@storybook/client-api';
+import { useEffect, useState, useRef, useParameter } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
 import { writeStorage } from '@rehooks/local-storage';
 import { SelectionUrlQuery } from './types';
@@ -21,10 +21,7 @@ export const withFixtures = makeDecorator({
       ignoreQueryPrefix: true,
     });
 
-    const fixturesInput = {
-      ...options,
-      ...parameters,
-    };
+    const fixturesInput = useParameter(PARAM_KEY) as {};
 
     const { fixtures: initialFixtures, settings } = processInput(fixturesInput);
     const [fixtures, setFixtures] = useState(initialFixtures);
@@ -73,7 +70,10 @@ export const withFixtures = makeDecorator({
         typeof activeVariant === 'string' && activeVariant.startsWith('fetch::');
       // In isolated iframe view. State is restored from encoded fixtures query
       // Except for remote fetches. Those need to be done in the initialisation phase.
-      if (urlQuery.fixtures && !isRemote) {
+      const parentParams = new URLSearchParams(window.parent.location.search);
+      const isIsolated = Boolean(parentParams.get('id'));
+
+      if (isIsolated && !isRemote) {
         return undefined;
       }
 
