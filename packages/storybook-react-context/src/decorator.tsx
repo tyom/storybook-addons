@@ -15,13 +15,6 @@ function defaultReducer(state, action) {
   };
 }
 
-const ContextWrapper = ({ context, children }) => {
-  if (typeof children !== 'function') {
-    throw new Error('ContextWrapper children must be a function');
-  }
-  return children(React.useContext(context));
-};
-
 export const withReactContext = makeDecorator({
   name: ADDON_ID,
   parameterName: PARAM_KEY,
@@ -44,9 +37,18 @@ export const withReactContext = makeDecorator({
         : parameters || options?.initialState;
     const providerValue = React.useReducer(reducer, initialState);
 
+    const ContextWrapper = ({ children }) => {
+      const ctx = React.useContext(ReactContext);
+
+      if (typeof children !== 'function') {
+        throw new Error('ContextWrapper children must be a function');
+      }
+      return children(ctx);
+    };
+
     return (
       <ReactContext.Provider value={providerValue}>
-        <ContextWrapper context={ReactContext}>
+        <ContextWrapper>
           {(ctx) =>
             storyFn({
               ...context,
