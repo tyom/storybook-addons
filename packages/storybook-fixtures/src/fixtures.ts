@@ -62,7 +62,7 @@ export function getStoryFixturesState({
 }: IStoryFixtureState) {
   const { query: localStorageQuery } = localState[storyId] || {};
   const { selectedVariantIdxs, selectedSectionIdx } = parseStoryState(
-    urlQuery || localStorageQuery
+    localStorageQuery || urlQuery
   );
   const sections = Object.values(fixtures);
 

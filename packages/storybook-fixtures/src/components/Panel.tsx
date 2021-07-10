@@ -1,4 +1,5 @@
 /* global document */
+import qs from 'qs';
 import isPlainObject from 'lodash/isPlainObject';
 import React, { useEffect, useState } from 'react';
 import addons from '@storybook/addons';
@@ -157,11 +158,19 @@ export default function Panel() {
   }, [JSON.stringify(sectionNames), activeSectionIdx]);
 
   useEffect(() => {
-    // Only react to the changes in the UI
-    if (!initialisedValues) return;
+    const urlState = api.getUrlState();
+    const newQuery = {
+      ...urlState.queryParams,
+      fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
+      path: urlState.path,
+    };
+
     api.setQueryParams({
       fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
     });
+
+    const queryString = qs.stringify(newQuery, { encode: false, addQueryPrefix: true });
+    api.navigateUrl(queryString, {});
   }, [activeSectionIdx, selectedVariantIdxs.join('-')]);
 
   const createLabel = (label, key) => (
