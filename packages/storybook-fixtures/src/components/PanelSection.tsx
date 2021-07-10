@@ -6,7 +6,7 @@ import { PREVIEW_KEYDOWN } from '@storybook/core-events';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
 import { getEntries } from './Panel';
 
-interface IPanelSectionProps {
+export interface IPanelSectionProps {
   active: boolean;
   fixtureContents: {};
   sectionIdx?: number;
