@@ -12,7 +12,7 @@ const Card = {
         class="bg-cover h-64"
         :style="backgroundImageStyle"
       />
-      <div class="px-6 py-4">
+      <div data-id="body" class="px-6 py-4" :class="'bg-' + $props.bgColor">
         <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0" :class="'text-' + fixture.textColor">
           {{ fixture.title }}
         </h2>
@@ -31,6 +31,35 @@ const Card = {
 
 export default {
   title: 'storybook-fixtures',
+};
+
+export const fixtureWithArgs = (args, { fixtures: [genus, textColor] }) => {
+  return {
+    ...Card,
+    props: {
+      fixture: {
+        default: { ...genus, textColor },
+      },
+      bgColor: args.bgColor,
+    },
+  };
+};
+fixtureWithArgs.argTypes = {
+  bgColor: {
+    name: 'Background colour',
+    control: { type: 'inline-radio' },
+    options: ['yellow-300', 'blue-200'],
+  },
+};
+fixtureWithArgs.parameters = {
+  fixtures: {
+    'Panthera Genus': pantheraData,
+    colors: {
+      Red: 'red-600',
+      Green: 'green-700',
+      Blue: 'blue-600',
+    },
+  },
 };
 
 export const fixtureSections = (_, { fixtures: [genus, textColor] }) => {

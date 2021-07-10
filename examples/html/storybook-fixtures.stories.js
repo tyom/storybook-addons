@@ -4,7 +4,11 @@ import pantheraData from '../__fixtures__/panthera.json';
 
 const pantheraCollection = Object.values(pantheraData);
 
-function renderTemplate({ title, extract_html, thumbnail } = {}, textColor = '') {
+function renderTemplate(
+  { title, extract_html, thumbnail } = {},
+  textColor = '',
+  bgColor = ''
+) {
   if (!title || !extract_html) {
     return '';
   }
@@ -15,7 +19,7 @@ function renderTemplate({ title, extract_html, thumbnail } = {}, textColor = '')
             ? `<div class="bg-cover h-64" style="background-image: url('{{ image }}')"></div>`
             : ''
         }
-        <div class="px-6 py-4">
+        <div data-id="body" class="px-6 py-4 bg-${bgColor}">
           <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0 text-${textColor}">
             {{ title }}
           </h2>
@@ -29,6 +33,27 @@ function renderTemplate({ title, extract_html, thumbnail } = {}, textColor = '')
 }
 export default {
   title: 'storybook-fixtures',
+};
+
+export const fixtureWithArgs = (args, { fixtures: [genus, textColor = ''] }) =>
+  renderTemplate(genus, textColor, args.bgColor);
+
+fixtureWithArgs.argTypes = {
+  bgColor: {
+    name: 'Background colour',
+    control: { type: 'inline-radio' },
+    options: ['yellow-300', 'blue-200'],
+  },
+};
+fixtureWithArgs.parameters = {
+  fixtures: {
+    'Panthera Genus': pantheraData,
+    colors: {
+      Red: 'red-600',
+      Green: 'green-700',
+      Blue: 'blue-600',
+    },
+  },
 };
 
 export const fixtureSections = (_, { fixtures: [genus, textColor = ''] }) =>

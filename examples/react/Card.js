@@ -18,7 +18,7 @@ const Card = ({
           style={{ backgroundImage: `url('${thumbnail.source}')` }}
         />
       )}
-      <div className={`px-6 py-4 bg-${bgColor}`}>
+      <div data-id="body" className={`px-6 py-4 bg-${bgColor}`}>
         <h2 data-id="title" className={`font-bold text-2xl mb-2 mt-0 ${color}`}>
           {title}
         </h2>

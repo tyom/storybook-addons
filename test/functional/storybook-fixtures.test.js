@@ -30,6 +30,7 @@ const useCases = [
     : true
 );
 const titleSelector = '[data-id="title"]';
+const bodySelector = '[data-id="body"]';
 
 const environmentUseCases = useCases.map((c) =>
   isDevServer
@@ -47,6 +48,24 @@ environmentUseCases.forEach(({ urlPath, fixtureName }) => {
       fixtureName.toLowerCase()
     )(`storybook-fixtures ${fixtureName}`)
     .page(BASE_URL + urlPath);
+
+  test('Fixtures and args', async (t) => {
+    await page.selectSidebarItem('Fixture With Args');
+
+    await page.selectPanel('Controls');
+    await page.selectControl('yellow-300');
+
+    await page.selectPanel('Fixtures');
+    await page.selectFixture('Panthera Genus');
+    await page.selectVariant('Snow Leopard');
+
+    await page.selectFixture('colors');
+    await page.selectVariant('Blue');
+
+    await page.selectFixture('Panthera Genus');
+    await page.assertClassInPreview(bodySelector, 'bg-yellow-300');
+    await page.assertClassInPreview(titleSelector, 'text-blue-600');
+  });
 
   test('Fixture Sections', async (t) => {
     await page.selectSidebarItem('Fixture Sections');

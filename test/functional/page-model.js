@@ -5,6 +5,7 @@ class Page {
     this.panelTabs = Selector(
       '#storybook-panel-root > div:nth-child(1) [role="tablist"]'
     );
+    this.controlsPanel = Selector('#storybook-panel-root .docblock-argstable-body');
     this.fixtureTabs = Selector('#storybook-panel-root .fixture-section-tabs');
     this.tabActions = Selector(
       '#storybook-panel-root #panel-tab-content > div > div > menu + div'
@@ -44,6 +45,11 @@ class Page {
   selectPanel(panelName) {
     const panelTab = this.panelTabs.find('button').withText(panelName);
     return t.click(panelTab);
+  }
+
+  selectControl(controlName) {
+    const fixtureTab = this.controlsPanel.find('label').withText(controlName);
+    return t.click(fixtureTab);
   }
 
   selectFixture(fixtureName) {

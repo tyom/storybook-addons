@@ -166,11 +166,11 @@ export default function Panel() {
     };
 
     api.setQueryParams({
-      fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
+      fixtures: newQuery.fixtures,
     });
 
-    const queryString = qs.stringify(newQuery, { encode: false, addQueryPrefix: true });
-    api.navigateUrl(queryString, {});
+    const newPath = qs.stringify(newQuery, { encode: false, addQueryPrefix: true });
+    api.navigateUrl(newPath, {});
   }, [activeSectionIdx, selectedVariantIdxs.join('-')]);
 
   const createLabel = (label, key) => (
