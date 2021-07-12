@@ -9,7 +9,7 @@
   "scripts": {
     "build": "lerna run build",
     "watch": "lerna run watch --parallel",
-    "test": "yarn examples:build && yarn lint && yarn test:unit && yarn test:func:headless",
+    "test": "yarn lerna:link && yarn examples:build && yarn lint && yarn test:unit && yarn test:func:headless",
     "test:unit": "jest",
     "test:func": "testcafe chrome test/functional/*.test.js --app 'yarn examples:serve'",
     "test:func:headless": "testcafe chrome:headless test/functional/*.test.js --app 'yarn examples:serve'",
