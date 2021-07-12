@@ -10,6 +10,8 @@ jobs:
   deploy:
     name: build and deploy
     runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 3
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -20,9 +22,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build packages
+        run: yarn build
+
       - name: Build examples
-        run: |
-          yarn examples:build
+        run: yarn examples:build
 
       - name: Deploy to GH Pages
         uses: peaceiris/actions-gh-pages@v3
