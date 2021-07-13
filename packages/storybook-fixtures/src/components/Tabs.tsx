@@ -14,13 +14,13 @@ interface TabsProps {
   onResetSelections: () => void;
 }
 
-export const Tabs: React.FC<TabsProps> = ({
+export default function Tabs({
   activeIdx,
   singleTab = false,
   tabs,
   onTabClick = () => {},
   onResetSelections = () => {},
-}) => {
+}: TabsProps) {
   const showTabs = (tabs.length === 1 && singleTab) || tabs.length > 1;
   const actionItems = [
     {
@@ -51,7 +51,7 @@ export const Tabs: React.FC<TabsProps> = ({
       <ActionBar actionItems={actionItems} />
     </Container>
   );
-};
+}
 
 const Container = styled.div`
   position: relative;

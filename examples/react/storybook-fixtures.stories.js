@@ -82,9 +82,9 @@ remoteFixture.parameters = {
   },
 };
 
-export const stringValueFixture = (_, { fixture }) => {
-  return <h1 className="font-sans text-white">{fixture}</h1>;
-};
+export const stringValueFixture = (_, { fixture }) => (
+  <h1 className="font-sans text-white">{fixture}</h1>
+);
 stringValueFixture.parameters = {
   fixtures: {
     Values: {

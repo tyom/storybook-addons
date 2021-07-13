@@ -1,11 +1,9 @@
 /* global window */
 import qs from 'qs';
-import { useEffect, useState, useRef, useParameter } from '@storybook/client-api';
+import { useEffect, useState, useParameter } from '@storybook/client-api';
 import addons, { makeDecorator, StoryContext } from '@storybook/addons';
-import { writeStorage } from '@rehooks/local-storage';
-import { SelectionUrlQuery } from './types';
 import { fetchRemotes } from './remotes';
-import { processInput, stringifyStoryState, getStoryFixturesState } from './fixtures';
+import { processInput, getStoryFixturesState } from './fixtures';
 import { ADDON_ID, PARAM_KEY, Events } from '.';
 
 export const withFixtures = makeDecorator({
@@ -17,74 +15,59 @@ export const withFixtures = makeDecorator({
     { options = {}, parameters = {} }
   ) => {
     const channel = addons.getChannel();
-    const urlQuery: SelectionUrlQuery = qs.parse(window.location.search, {
+    const urlQuery = qs.parse(global.parent.location.search, {
       ignoreQueryPrefix: true,
     });
 
     const fixturesInput = useParameter(PARAM_KEY) as {};
-
     const { fixtures: initialFixtures, settings } = processInput(fixturesInput);
+
     const [fixtures, setFixtures] = useState(initialFixtures);
-    const [localState, setLocalState] = useState(
-      JSON.parse(window.localStorage.getItem(ADDON_ID) || '{}')
+
+    const initialFixturesState = getStoryFixturesState(fixtures, urlQuery);
+
+    const [selectedVariants, setSelectedVariants] = useState(
+      initialFixturesState.selectedVariants
     );
-    const serialisedLocalState = JSON.stringify(localState);
+    const [activeVariant, setActiveVariant] = useState(
+      initialFixturesState.activeVariant
+    );
 
-    const {
-      selectedVariants,
-      activeVariant,
-      selectedVariantIdxs,
-    } = getStoryFixturesState({
-      fixtures,
-      storyId: context.id,
-      localState,
-      urlQuery: urlQuery.fixtures,
-    });
+    const isRemote =
+      typeof activeVariant === 'string' && activeVariant.startsWith('fetch::');
+    // In isolated iframe view. State is restored from encoded fixtures query
+    // Except for remote fetches. Those need to be done in the initialisation phase.
+    const isIsolated = Boolean(urlQuery.id);
 
-    const selectedVariantIdxsRef = useRef(selectedVariantIdxs);
+    function handleFixtureSelect(fixturesState) {
+      if (!fixturesState.activeVariant) return;
 
-    function getStoryQuery(sectionIdx, variantIdx?) {
-      const variantIdxs: number[] = selectedVariantIdxsRef.current;
-      if (typeof variantIdx !== 'undefined') {
-        variantIdxs[sectionIdx] = variantIdx;
-      }
-      return stringifyStoryState(variantIdxs, sectionIdx);
-    }
-
-    function updateLocalState(state) {
-      if (!state) {
-        setLocalState({});
-        selectedVariantIdxsRef.current = [];
-        return;
-      }
-      setLocalState({
-        ...localState,
-        [context.id]: {
-          query: getStoryQuery(state.sectionIdx, state.variantIdx),
-        },
-      });
+      setSelectedVariants(fixturesState.selectedVariants);
+      setActiveVariant(fixturesState.activeVariant);
     }
 
     useEffect(() => {
-      const isRemote =
-        typeof activeVariant === 'string' && activeVariant.startsWith('fetch::');
-      // In isolated iframe view. State is restored from encoded fixtures query
-      // Except for remote fetches. Those need to be done in the initialisation phase.
-      const parentParams = new URLSearchParams(window.parent.location.search);
-      const isIsolated = Boolean(parentParams.get('id'));
+      channel.on(Events.SELECT_FIXTURE, handleFixtureSelect);
 
-      if (isIsolated && !isRemote) {
-        return undefined;
-      }
+      return () => {
+        channel.off(Events.SELECT_FIXTURE, handleFixtureSelect);
+      };
+    }, []);
 
+    useEffect(() => {
       if (isRemote) {
         fetchRemotes(fixtures).then((resolvedFixtures) => {
-          setFixtures(resolvedFixtures);
+          if (isIsolated) {
+            const fixturesState = getStoryFixturesState(resolvedFixtures, urlQuery);
+            channel.emit(Events.SELECT_FIXTURE, fixturesState);
+          } else {
+            setFixtures(resolvedFixtures);
 
-          channel.emit(Events.INIT_PANEL, {
-            fixtures: resolvedFixtures,
-            settings,
-          });
+            channel.emit(Events.INIT_PANEL, {
+              fixtures: resolvedFixtures,
+              settings,
+            });
+          }
         });
       } else {
         channel.emit(Events.INIT_PANEL, {
@@ -92,19 +75,7 @@ export const withFixtures = makeDecorator({
           settings,
         });
       }
-
-      channel.on(Events.SELECT_FIXTURE, updateLocalState);
-
-      return () => {
-        channel.off(Events.SELECT_FIXTURE, updateLocalState);
-        // Unset fixtures to avoid it persisting to the next story
-        channel.emit(Events.INIT_PANEL);
-      };
-    }, []);
-
-    useEffect(() => {
-      writeStorage(ADDON_ID, localState);
-    }, [serialisedLocalState]);
+    }, [urlQuery.fixtures]);
 
     return storyFn({
       ...context,

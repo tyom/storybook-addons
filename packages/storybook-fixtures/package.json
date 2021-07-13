@@ -8,7 +8,6 @@
     "watch": "del dist && tsc --watch"
   },
   "dependencies": {
-    "@rehooks/local-storage": "2.4.0",
     "@storybook/addons": "^6.3.4",
     "@storybook/api": "^6.3.4",
     "@storybook/client-api": "^6.3.4",
@@ -17,7 +16,8 @@
     "@storybook/theming": "^6.3.4",
     "cross-fetch": "^3.1.4",
     "lodash": "^4.17.21",
-    "qs": "^6.10.1"
+    "qs": "^6.10.1",
+    "store2": "^2.12.0"
   },
   "devDependencies": {
     "fetch-mock-jest": "^1.5.1"

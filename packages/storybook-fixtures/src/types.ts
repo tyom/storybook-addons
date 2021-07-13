@@ -10,10 +10,6 @@ export type Variant = any;
 
 export type SelectionQuery = string | undefined;
 
-export type SelectionUrlQuery = {
-  fixtures?: SelectionQuery;
-};
-
 export type KeyboardEvent = {
   key: string;
   altKey: boolean;

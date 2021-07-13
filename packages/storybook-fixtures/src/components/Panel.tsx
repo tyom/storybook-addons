@@ -1,17 +1,22 @@
 /* global document */
 import qs from 'qs';
+import store from 'store2';
 import isPlainObject from 'lodash/isPlainObject';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import addons from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
-import { useLocalStorage } from '@rehooks/local-storage';
 import { styled } from '@storybook/theming';
 import PanelSection from './PanelSection';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
-import { parseStoryState, stringifyStoryState } from '../fixtures';
-import { Tabs } from './Tabs';
-import { ADDON_ID, Events } from '..';
+import {
+  getStoryFixturesState,
+  parseFixturesQuery,
+  stringifyStoryState,
+} from '../fixtures';
+import NoFixtures from './NoFixtures';
+import Tabs from './Tabs';
+import { Events, ADDON_ID } from '..';
 
 type FixtureData = {};
 
@@ -24,29 +29,21 @@ interface IFixturesWithSettings {
   settings: IFixtureSettings;
 }
 
-const fixtureExample = `
-myStory.parameters = {
-  fixtures: {
-    'Section name (tab)': {
-      'Variant name': {
-         // fixture data
-       }
-    }
-  }
+interface PanelState {
+  fixtures: FixtureData;
+  settings: IFixtureSettings;
+  selectedSectionIdx: number;
+  selectedVariantIdxs: number[];
 }
-`.trim();
 
-function EmptyPlaceholder() {
-  return (
-    <Placeholder>
-      <div className="content">
-        <h3>No fixtures</h3>
-        <p>Add story fixtures using `fixtures` story parameter.</p>
-        <code>{fixtureExample}</code>
-      </div>
-    </Placeholder>
-  );
-}
+const initialState: PanelState = {
+  fixtures: {},
+  settings: {},
+  selectedSectionIdx: 0,
+  selectedVariantIdxs: [],
+};
+
+const qsOptions = { encode: false, addQueryPrefix: true };
 
 export function getEntries(obj = {}) {
   if (Array.isArray(obj)) {
@@ -58,56 +55,92 @@ export function getEntries(obj = {}) {
   return [];
 }
 
+const stateReducer = (state, action): PanelState => {
+  switch (action.type) {
+    case 'SET_FIXTURES':
+      return { ...state, fixtures: action.payload };
+    case 'SET_SETTINGS':
+      return { ...state, settings: action.payload };
+    case 'SET_SECTION_IDX':
+      return { ...state, selectedSectionIdx: action.payload };
+    case 'SET_VARIANT_IDXS':
+      return { ...state, selectedVariantIdxs: action.payload };
+    default:
+      return state;
+  }
+};
+
+function buildQueryFromState(panelState, urlState) {
+  const { path, queryParams } = urlState;
+  const fixturesQueryParam = stringifyStoryState(
+    panelState.selectedVariantIdxs,
+    panelState.selectedSectionIdx
+  );
+
+  return {
+    path,
+    ...queryParams,
+    fixtures: fixturesQueryParam,
+  };
+}
+
+function setQuery(api, { fixtures, ...query }) {
+  const newUrl = qs.stringify(query, qsOptions);
+  api.setQueryParams({
+    fixtures,
+  });
+  // Replace the URL with fixtures excluded as Storybook internally updates the URL
+  // for args when setting query params which results in the previously set query in
+  // the next selected story
+  api.navigateUrl(newUrl, { replace: true });
+}
+
+function setStore(storyId, query) {
+  const currentStore = store.local.get(ADDON_ID) || {};
+  store.local.set(ADDON_ID, {
+    ...currentStore,
+    [storyId]: query.fixtures,
+  });
+}
+
 export default function Panel() {
   const api = useStorybookApi();
-  const { storyId = '' } = api.getUrlState();
 
-  const [storiesState] = useLocalStorage(ADDON_ID, {});
-  const { selectedSectionIdx, selectedVariantIdxs } = getCurrentStoryState();
-  const [fixtures, setFixtures] = useState<FixtureData>({});
-  const [fixtureSettings, setFixtureSettings] = useState<IFixtureSettings>({});
-
-  const selectedVariantIdx = selectedVariantIdxs[selectedSectionIdx];
-  const [activeSectionIdx, setActiveSectionIdx] = useState(selectedSectionIdx);
-  const [initialisedValues, setInitialisedValues] = useState(false);
+  const [state, dispatch] = useReducer(stateReducer, initialState);
+  const [isInitialised, setIsInitialised] = useState(false);
 
   const channel = addons.getChannel();
-  const entries = getEntries(fixtures);
-  const sectionNames = Object.keys(fixtures);
+  const entries = getEntries(state.fixtures);
+  const sectionNames = Object.keys(state.fixtures);
 
+  // Selecting individual story
   async function initialise(initialValues?: IFixturesWithSettings | null) {
-    if (!initialValues) {
-      setFixtures({});
-      setFixtureSettings({});
-      setInitialisedValues(false);
-      return;
+    const { storyId } = api.getUrlState();
+    const localStore = store.local.get(ADDON_ID) ?? {};
+
+    if (initialValues) {
+      dispatch({ type: 'SET_FIXTURES', payload: initialValues?.fixtures });
+      dispatch({ type: 'SET_SETTINGS', payload: initialValues?.settings });
     }
-    setFixtures(initialValues.fixtures);
-    setFixtureSettings(initialValues.settings);
-    // Initialise to first section to avoid trying to select non-existing section in the following story
-    setActiveSectionIdx(0);
-    setInitialisedValues(true);
+
+    const fixturesQuery = storyId ? localStore[storyId] : '0:0';
+    const { selectedSectionIdx, selectedVariantIdxs } = parseFixturesQuery(fixturesQuery);
+
+    dispatch({ type: 'SET_SECTION_IDX', payload: selectedSectionIdx });
+    dispatch({ type: 'SET_VARIANT_IDXS', payload: selectedVariantIdxs });
+
+    setIsInitialised(true);
   }
 
-  function getCurrentStoryState() {
-    const currentStory = storiesState[storyId] || {};
-    return parseStoryState(currentStory.query);
+  function handleVariantSelect(sectionIdx, variantIdx?): void {
+    const newVariantIdxs = [...state.selectedVariantIdxs];
+    newVariantIdxs.splice(sectionIdx, 1, variantIdx);
+
+    dispatch({ type: 'SET_VARIANT_IDXS', payload: newVariantIdxs });
   }
 
-  function selectVariant(sectionIdx, variantIdx?): void {
-    setActiveSectionIdx(sectionIdx);
-
-    channel.emit(Events.SELECT_FIXTURE, {
-      sectionIdx,
-      variantIdx,
-    });
-  }
-
-  function selectSection(sectionIdx) {
-    setActiveSectionIdx(sectionIdx);
-    channel.emit(Events.SELECT_FIXTURE, {
-      sectionIdx,
-    });
+  function handleSectionSelect(sectionIdx) {
+    dispatch({ type: 'SET_SECTION_IDX', payload: sectionIdx });
   }
 
   function handlePreviewKeyDown({ event }: PreviewKeyDownEvent) {
@@ -118,21 +151,22 @@ export default function Panel() {
     // Keys 1-9 with Alt pressed
     if (altKey && keyCode >= 49 && keyCode <= 57) {
       // 0-based index of tab
-      selectSection(-49 + keyCode);
+      handleSectionSelect(-49 + keyCode);
     }
     // Vim navigation: left/right to switch section tabs
     // Switch to right
-    if (key === 'l' && activeSectionIdx < sectionNames.length - 1) {
-      selectSection(activeSectionIdx + 1);
+    if (key === 'l' && state.selectedSectionIdx < sectionNames.length - 1) {
+      handleSectionSelect(state.selectedSectionIdx + 1);
     }
     // Switch to left
-    if (key === 'h' && activeSectionIdx > 0) {
-      selectSection(activeSectionIdx - 1);
+    if (key === 'h' && state.selectedSectionIdx > 0) {
+      handleSectionSelect(state.selectedSectionIdx - 1);
     }
   }
 
-  function handleResetSelections() {
-    channel.emit(Events.SELECT_FIXTURE, null);
+  function clearSelections() {
+    dispatch({ type: 'SET_VARIANT_IDXS', payload: [] });
+    store.local.remove(ADDON_ID);
   }
 
   useEffect(() => {
@@ -143,6 +177,7 @@ export default function Panel() {
     };
   }, []);
 
+  // Changing section
   useEffect(() => {
     if (sectionNames.length) {
       channel.on(PREVIEW_KEYDOWN, handlePreviewKeyDown);
@@ -151,93 +186,67 @@ export default function Panel() {
 
     return () => {
       if (sectionNames.length) {
-        document.removeEventListener('keydown', handleKeyDown);
         channel.off(PREVIEW_KEYDOWN, handlePreviewKeyDown);
+        document.removeEventListener('keydown', handleKeyDown);
       }
     };
-  }, [JSON.stringify(sectionNames), activeSectionIdx]);
+  }, [sectionNames.join('-'), state.selectedSectionIdx]);
 
+  // Changing variant selection
   useEffect(() => {
-    const urlState = api.getUrlState();
-    const newQuery = {
-      ...urlState.queryParams,
-      fixtures: stringifyStoryState(selectedVariantIdxs, activeSectionIdx),
-      path: urlState.path,
-    };
+    const { storyId, ...urlState } = api.getUrlState();
 
-    api.setQueryParams({
-      fixtures: newQuery.fixtures,
-    });
+    if (!isInitialised || !storyId) return;
 
-    const newPath = qs.stringify(newQuery, { encode: false, addQueryPrefix: true });
-    api.navigateUrl(newPath, {});
-  }, [activeSectionIdx, selectedVariantIdxs.join('-')]);
+    const query = buildQueryFromState(state, urlState);
+    const fixturesState = getStoryFixturesState(state.fixtures, query);
 
-  const createLabel = (label, key) => (
-    <StyledTabButtonContent>
-      <span className="tab-label">{label}</span>
-      {entries.length > 1 && key <= 9 && <span className="tab-label-key">alt+{key}</span>}
-    </StyledTabButtonContent>
-  );
+    channel.emit(Events.SELECT_FIXTURE, fixturesState);
 
+    setStore(storyId, query);
+    setQuery(api, query);
+  }, [state.selectedVariantIdxs, state.selectedSectionIdx, isInitialised]);
+
+  if (!isInitialised) {
+    return null;
+  }
+
+  const selectedVariantIdx = state.selectedVariantIdxs[state.selectedSectionIdx];
   const tabs = entries.map(([label, contents], idx) => ({
-    label: createLabel(label, idx + 1),
+    label: (
+      <StyledTabButtonContent>
+        <span className="tab-label">{label}</span>
+        {entries.length > 1 && idx + 1 <= 9 && (
+          <span className="tab-label-key">alt+{idx + 1}</span>
+        )}
+      </StyledTabButtonContent>
+    ),
     panel: (
       <PanelSection
         key={label}
-        active={activeSectionIdx === idx}
+        active={state.selectedSectionIdx === idx}
         fixtureContents={contents}
         sectionIdx={idx}
         selectedFixtureIdx={selectedVariantIdx}
-        onSelect={selectVariant}
+        onSelect={handleVariantSelect}
       />
     ),
   }));
 
-  if (initialisedValues && tabs.length === 0) {
-    return <EmptyPlaceholder />;
-  }
-
   if (tabs.length === 0) {
-    return null;
+    return <NoFixtures />;
   }
 
   return (
     <Tabs
       tabs={tabs}
-      singleTab={fixtureSettings.singleTab}
-      activeIdx={activeSectionIdx}
-      onTabClick={selectSection}
-      onResetSelections={handleResetSelections}
+      singleTab={state.settings.singleTab}
+      activeIdx={state.selectedSectionIdx}
+      onTabClick={handleSectionSelect}
+      onResetSelections={clearSelections}
     />
   );
 }
-
-const Placeholder = styled.div`
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  align-items: center;
-
-  .content {
-    border: 2px solid #aaa3;
-    padding: 2rem;
-    margin: 1rem auto;
-  }
-
-  h3 {
-    font-weight: 600;
-    font-size: 1.4em;
-  }
-
-  code {
-    white-space: pre;
-    padding: 1rem;
-    background-color: #0001;
-    display: block;
-    margin: 0 -1rem -1rem -1rem;
-  }
-`;
 
 const StyledTabButtonContent = styled.span`
   .tab-label-key {
