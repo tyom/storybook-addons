@@ -9,8 +9,8 @@
   "dependencies": {
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "storybook-fixtures": "latest",
-    "storybook-react-context": "latest",
+    "storybook-fixtures": "*",
+    "storybook-react-context": "*",
     "tailwindcss": "^2.2.7"
   },
   "devDependencies": {
