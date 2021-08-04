@@ -8,12 +8,12 @@
     "watch": "del dist && tsc --watch"
   },
   "dependencies": {
-    "@storybook/addons": "^6.3.4",
-    "@storybook/api": "^6.3.4",
-    "@storybook/client-api": "^6.3.4",
-    "@storybook/components": "^6.3.4",
-    "@storybook/core-events": "^6.3.4",
-    "@storybook/theming": "^6.3.4",
+    "@storybook/addons": "^6.3.6",
+    "@storybook/api": "^6.3.6",
+    "@storybook/client-api": "^6.3.6",
+    "@storybook/components": "^6.3.6",
+    "@storybook/core-events": "^6.3.6",
+    "@storybook/theming": "^6.3.6",
     "cross-fetch": "^3.1.4",
     "lodash": "^4.17.21",
     "qs": "^6.10.1",

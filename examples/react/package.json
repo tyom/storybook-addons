@@ -11,13 +11,13 @@
     "react-dom": "17.0.2",
     "storybook-fixtures": "latest",
     "storybook-react-context": "latest",
-    "tailwindcss": "^2.2.4"
+    "tailwindcss": "^2.2.7"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^6.3.4",
-    "@storybook/addon-storysource": "^6.3.4",
-    "@storybook/addons": "^6.3.4",
-    "@storybook/react": "^6.3.4",
-    "@storybook/theming": "^6.3.4"
+    "@storybook/addon-essentials": "^6.3.6",
+    "@storybook/addon-storysource": "^6.3.6",
+    "@storybook/addons": "^6.3.6",
+    "@storybook/react": "^6.3.6",
+    "@storybook/theming": "^6.3.6"
   }
 }
