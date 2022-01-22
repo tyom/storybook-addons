@@ -43,6 +43,9 @@ const initialState: PanelState = {
   selectedVariantIdxs: [],
 };
 
+const KEYCODE_NUMBER_1 = 49;
+const KEYCODE_NUMBER_9 = 57;
+
 const qsOptions = { encode: false, addQueryPrefix: true };
 
 export function getEntries(obj = {}) {
@@ -149,9 +152,11 @@ export default function Panel() {
 
   function handleKeyDown({ key, altKey, keyCode }: KeyboardEvent) {
     // Keys 1-9 with Alt pressed
-    if (altKey && keyCode >= 49 && keyCode <= 57) {
+    if (altKey && keyCode >= KEYCODE_NUMBER_1 && keyCode <= KEYCODE_NUMBER_9) {
+      // Prevent from selecting the section tab that doesn't exist
+      if (sectionNames.length - (keyCode - KEYCODE_NUMBER_1) < 1) return;
       // 0-based index of tab
-      handleSectionSelect(-49 + keyCode);
+      handleSectionSelect(0 - KEYCODE_NUMBER_1 + keyCode);
     }
     // Vim navigation: left/right to switch section tabs
     // Switch to right
