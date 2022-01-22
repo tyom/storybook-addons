@@ -33,7 +33,7 @@ export default {
   title: 'storybook-fixtures',
 };
 
-export const fixtureWithArgs = (args, { fixtures: [genus, textColor] }) => {
+export const FixtureWithArgs = (args, { fixtures: [genus, textColor] }) => {
   return {
     ...Card,
     props: {
@@ -44,14 +44,14 @@ export const fixtureWithArgs = (args, { fixtures: [genus, textColor] }) => {
     },
   };
 };
-fixtureWithArgs.argTypes = {
+FixtureWithArgs.argTypes = {
   bgColor: {
     name: 'Background colour',
     control: { type: 'inline-radio' },
     options: ['yellow-300', 'blue-200'],
   },
 };
-fixtureWithArgs.parameters = {
+FixtureWithArgs.parameters = {
   fixtures: {
     'Panthera Genus': pantheraData,
     colors: {
@@ -62,7 +62,7 @@ fixtureWithArgs.parameters = {
   },
 };
 
-export const fixtureSections = (_, { fixtures: [genus, textColor] }) => {
+export const FixtureSections = (_, { fixtures: [genus, textColor] }) => {
   return {
     ...Card,
     props: {
@@ -72,7 +72,7 @@ export const fixtureSections = (_, { fixtures: [genus, textColor] }) => {
     },
   };
 };
-fixtureSections.parameters = {
+FixtureSections.parameters = {
   fixtures: {
     'Panthera Genus': pantheraData,
     colors: {
@@ -83,7 +83,7 @@ fixtureSections.parameters = {
   },
 };
 
-export const collectionFixtureNoTab = (_, { fixture }) => ({
+export const CollectionFixtureNoTab = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -91,14 +91,14 @@ export const collectionFixtureNoTab = (_, { fixture }) => ({
     },
   },
 });
-collectionFixtureNoTab.storyName = 'fixture setting: singleTab';
-collectionFixtureNoTab.parameters = {
+CollectionFixtureNoTab.storyName = 'fixture setting: singleTab';
+CollectionFixtureNoTab.parameters = {
   fixtures: {
     collection: pantheraCollection,
   },
 };
 
-export const collectionFixture = (_, { fixture }) => ({
+export const CollectionFixture = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -106,14 +106,14 @@ export const collectionFixture = (_, { fixture }) => ({
     },
   },
 });
-collectionFixture.parameters = {
+CollectionFixture.parameters = {
   fixtures: {
     __singleTab: true,
     collection: pantheraCollection,
   },
 };
 
-export const objectFixture = (_, { fixture }) => ({
+export const ObjectFixture = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -121,14 +121,14 @@ export const objectFixture = (_, { fixture }) => ({
     },
   },
 });
-objectFixture.parameters = {
+ObjectFixture.parameters = {
   fixtures: {
     'Panthera Genus': pantheraData,
     'Keyed collection': keyBy(pantheraCollection, 'description'),
   },
 };
 
-export const remoteFixture = (_, { fixture }) => ({
+export const RemoteFixture = (_, { fixture }) => ({
   ...Card,
   props: {
     fixture: {
@@ -136,7 +136,7 @@ export const remoteFixture = (_, { fixture }) => ({
     },
   },
 });
-remoteFixture.parameters = {
+RemoteFixture.parameters = {
   fixtures: {
     Neofelis: {
       'Clouded Leopard':
@@ -147,7 +147,7 @@ remoteFixture.parameters = {
   },
 };
 
-export const stringValueFixture = (_, { fixture }) => ({
+export const StringValueFixture = (_, { fixture }) => ({
   template: `<h1 class="font-sans">{{ fixture }}</h1>`,
   props: {
     fixture: {
@@ -155,7 +155,7 @@ export const stringValueFixture = (_, { fixture }) => ({
     },
   },
 });
-stringValueFixture.parameters = {
+StringValueFixture.parameters = {
   fixtures: {
     Values: {
       Tiger: 'Largest species of the cat family',
@@ -166,7 +166,7 @@ stringValueFixture.parameters = {
   },
 };
 
-export const noFixture = () => ({
+export const NoFixture = () => ({
   ...Card,
   props: {
     fixture: {
@@ -179,7 +179,7 @@ export const noFixture = () => ({
   },
 });
 
-export const disabledFixture = () => ({
+export const DisabledFixture = () => ({
   ...Card,
   props: {
     fixture: {
@@ -191,6 +191,6 @@ export const disabledFixture = () => ({
     },
   },
 });
-disabledFixture.parameters = {
+DisabledFixture.parameters = {
   fixtures: { disable: true },
 };

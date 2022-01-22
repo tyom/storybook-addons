@@ -35,17 +35,17 @@ export default {
   title: 'storybook-fixtures',
 };
 
-export const fixtureWithArgs = (args, { fixtures: [genus, textColor = ''] }) =>
+export const FixtureWithArgs = (args, { fixtures: [genus, textColor = ''] }) =>
   renderTemplate(genus, textColor, args.bgColor);
 
-fixtureWithArgs.argTypes = {
+FixtureWithArgs.argTypes = {
   bgColor: {
     name: 'Background colour',
     control: { type: 'inline-radio' },
     options: ['yellow-300', 'blue-200'],
   },
 };
-fixtureWithArgs.parameters = {
+FixtureWithArgs.parameters = {
   fixtures: {
     'Panthera Genus': pantheraData,
     colors: {
@@ -56,10 +56,10 @@ fixtureWithArgs.parameters = {
   },
 };
 
-export const fixtureSections = (_, { fixtures: [genus, textColor = ''] }) =>
+export const FixtureSections = (_, { fixtures: [genus, textColor = ''] }) =>
   renderTemplate(genus, textColor);
 
-fixtureSections.parameters = {
+FixtureSections.parameters = {
   fixtures: {
     'Panthera Genus': pantheraData,
     colors: {
@@ -70,32 +70,32 @@ fixtureSections.parameters = {
   },
 };
 
-export const collectionFixtureNoTab = (_, { fixture }) => renderTemplate(fixture);
-collectionFixtureNoTab.storyName = 'fixture setting: singleTab';
-collectionFixtureNoTab.parameters = {
+export const CollectionFixtureNoTab = (_, { fixture }) => renderTemplate(fixture);
+CollectionFixtureNoTab.storyName = 'fixture setting: singleTab';
+CollectionFixtureNoTab.parameters = {
   fixtures: {
     collection: pantheraCollection,
   },
 };
 
-export const collectionFixture = (_, { fixture }) => renderTemplate(fixture);
-collectionFixture.parameters = {
+export const CollectionFixture = (_, { fixture }) => renderTemplate(fixture);
+CollectionFixture.parameters = {
   fixtures: {
     __singleTab: true,
     collection: pantheraCollection,
   },
 };
 
-export const objectFixture = (_, { fixture }) => renderTemplate(fixture);
-objectFixture.parameters = {
+export const ObjectFixture = (_, { fixture }) => renderTemplate(fixture);
+ObjectFixture.parameters = {
   fixtures: {
     'Panthera Genus': pantheraData,
     'Keyed collection': keyBy(pantheraCollection, 'description'),
   },
 };
 
-export const remoteFixture = (_, { fixture }) => renderTemplate(fixture);
-remoteFixture.parameters = {
+export const RemoteFixture = (_, { fixture }) => renderTemplate(fixture);
+RemoteFixture.parameters = {
   fixtures: {
     Neofelis: {
       'Clouded Leopard':
@@ -106,10 +106,10 @@ remoteFixture.parameters = {
   },
 };
 
-export const stringValueFixture = (_, { fixture }) =>
+export const StringValueFixture = (_, { fixture }) =>
   `<h1 class="font-sans">${fixture}</h1>`;
 
-stringValueFixture.parameters = {
+StringValueFixture.parameters = {
   fixtures: {
     Values: {
       Tiger: 'Largest species of the cat family',
@@ -120,7 +120,7 @@ stringValueFixture.parameters = {
   },
 };
 
-export const noFixture = () => {
+export const NoFixture = () => {
   return renderTemplate({
     title: 'No fixture',
     extract_html:
@@ -128,13 +128,13 @@ export const noFixture = () => {
   });
 };
 
-export const disabledFixture = () => {
+export const DisabledFixture = () => {
   return renderTemplate({
     title: 'Disable fixture',
     extract_html:
       '<p>For testing fixture state when switching to stories which disable it.</p>',
   });
 };
-disabledFixture.parameters = {
+DisabledFixture.parameters = {
   fixtures: { disabled: true },
 };

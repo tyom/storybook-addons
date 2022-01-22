@@ -56,7 +56,7 @@ export default {
   ],
 };
 
-export const changeContextOnMount = (_, { context: [state, dispatch] }) => {
+export const ChangeContextOnMount = (_, { context: [state, dispatch] }) => {
   React.useEffect(() => {
     setTimeout(() => {
       dispatch({
@@ -77,7 +77,7 @@ export const changeContextOnMount = (_, { context: [state, dispatch] }) => {
   );
 };
 
-export const changeContextOnClick = (_, { context: [state, dispatch] }) => {
+export const ChangeContextOnClick = (_, { context: [state, dispatch] }) => {
   function handleButtonToggle() {
     dispatch({
       color: getNextColor(state.color),
@@ -96,7 +96,7 @@ export const changeContextOnClick = (_, { context: [state, dispatch] }) => {
     </Component>
   );
 };
-changeContextOnClick.parameters = {
+ChangeContextOnClick.parameters = {
   initialState: {
     loaded: true,
   },
