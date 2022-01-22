@@ -14,10 +14,10 @@
     "@storybook/components": "^6.3.6",
     "@storybook/core-events": "^6.3.6",
     "@storybook/theming": "^6.3.6",
-    "cross-fetch": "^3.1.4",
+    "cross-fetch": "^3.1.5",
     "lodash": "^4.17.21",
-    "qs": "^6.10.1",
-    "store2": "^2.12.0"
+    "qs": "^6.10.3",
+    "store2": "^2.13.1"
   },
   "devDependencies": {
     "fetch-mock-jest": "^1.5.1"
