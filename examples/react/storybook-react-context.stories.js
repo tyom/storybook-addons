@@ -58,6 +58,8 @@ export default {
 
 export const ChangeContextOnMount = (_, { context: [state, dispatch] }) => {
   React.useEffect(() => {
+    if (state.loaded) return () => {};
+
     const timeout = setTimeout(() => {
       dispatch({
         loaded: true,
