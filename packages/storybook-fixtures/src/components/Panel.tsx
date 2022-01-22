@@ -3,7 +3,7 @@ import qs from 'qs';
 import store from 'store2';
 import isPlainObject from 'lodash/isPlainObject';
 import React, { useEffect, useState, useReducer } from 'react';
-import addons from '@storybook/addons';
+import { addons } from '@storybook/addons';
 import { useStorybookApi } from '@storybook/api';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
 import { styled } from '@storybook/theming';

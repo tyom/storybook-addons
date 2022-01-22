@@ -1,7 +1,7 @@
 /* global document */
 import React, { useEffect } from 'react';
 import { styled } from '@storybook/theming';
-import addons from '@storybook/addons';
+import { addons } from '@storybook/addons';
 import { PREVIEW_KEYDOWN } from '@storybook/core-events';
 import { KeyboardEvent, PreviewKeyDownEvent } from '../types';
 import { getEntries } from './Panel';

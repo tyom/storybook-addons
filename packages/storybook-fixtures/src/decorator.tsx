@@ -1,7 +1,8 @@
 /* global window */
 import qs from 'qs';
 import { useEffect, useState, useParameter } from '@storybook/client-api';
-import addons, { makeDecorator, StoryContext } from '@storybook/addons';
+import { addons, makeDecorator } from '@storybook/addons';
+import type { StoryContext } from '@storybook/addons';
 import { fetchRemotes } from './remotes';
 import { processInput, getStoryFixturesState } from './fixtures';
 import { ADDON_ID, PARAM_KEY, Events } from '.';

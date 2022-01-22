@@ -1,5 +1,5 @@
 import React from 'react';
-import addons, { mockChannel } from '@storybook/addons';
+import { addons, mockChannel } from '@storybook/addons';
 import { getEntries } from './Panel';
 
 addons.setChannel(mockChannel());

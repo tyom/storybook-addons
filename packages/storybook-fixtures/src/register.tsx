@@ -1,5 +1,5 @@
 import React from 'react';
-import addons, { types } from '@storybook/addons';
+import { addons, types } from '@storybook/addons';
 import { AddonPanel } from '@storybook/components';
 import { useParameter } from '@storybook/api';
 import Panel from './components/Panel';

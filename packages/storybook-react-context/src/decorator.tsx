@@ -1,7 +1,8 @@
 /* global window */
 import React from 'react';
 import { isPlainObject } from 'is-plain-object';
-import { makeDecorator, StoryContext } from '@storybook/addons';
+import { makeDecorator } from '@storybook/addons';
+import type { StoryContext } from '@storybook/addons';
 import { ADDON_ID, PARAM_KEY } from '.';
 
 const DefaultContext = React.createContext({
