@@ -2,12 +2,17 @@
 import React from 'react';
 import { isPlainObject } from 'is-plain-object';
 import { makeDecorator } from '@storybook/addons';
-import type { StoryContext } from '@storybook/addons';
+import type { StoryContext, WrapperSettings } from '@storybook/addons';
 import { ADDON_ID, PARAM_KEY } from '.';
 
-const DefaultContext = React.createContext({
-  default: true,
-});
+interface InitialContext {
+  initialState?: Record<string, any>;
+  reducer?: (state: any, action: any) => any;
+  useReducer?: boolean;
+  context?: React.Context<any>;
+}
+
+const DefaultContext = React.createContext({});
 
 function defaultReducer(state, action) {
   return {
@@ -22,7 +27,12 @@ export const withReactContext = makeDecorator({
   wrapper: (
     storyFn: (context: StoryContext) => any,
     context,
-    { options, parameters = {} }
+    {
+      options,
+      parameters = {},
+    }: WrapperSettings & {
+      options: InitialContext;
+    }
   ) => {
     if (options?.reducer && typeof options.reducer !== 'function') {
       throw new Error('Custom reducer argument must be a function');
@@ -36,7 +46,10 @@ export const withReactContext = makeDecorator({
             ...parameters,
           }
         : parameters || options?.initialState;
-    const providerValue = React.useReducer(reducer, initialState);
+    const providerValue =
+      options.useReducer === false
+        ? initialState
+        : React.useReducer(reducer, initialState);
 
     const ContextWrapper = ({ children }) => {
       const ctx = React.useContext(ReactContext);

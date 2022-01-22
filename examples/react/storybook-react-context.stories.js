@@ -107,3 +107,34 @@ ChangeContextOnClick.parameters = {
     loaded: true,
   },
 };
+
+export const NoReducer = ({ color }, { context: state }) => {
+  return (
+    <Component title="Context changes" color={state[color]}>
+      <h2>Context with no reducer</h2>
+      <p>
+        Use args (see <strong>Controls</strong> in addons) to select state from React
+        context.
+      </p>
+    </Component>
+  );
+};
+NoReducer.argTypes = {
+  color: {
+    options: ['red', 'green', 'blue'],
+    control: { type: 'radio' },
+  },
+};
+NoReducer.args = {
+  color: 'red',
+};
+NoReducer.decorators = [
+  withReactContext({
+    useReducer: false,
+    initialState: {
+      red: 'red-400',
+      blue: 'blue-400',
+      green: 'green-400',
+    },
+  }),
+];

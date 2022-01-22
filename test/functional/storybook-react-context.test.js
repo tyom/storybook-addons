@@ -37,3 +37,21 @@ test('React context is set on button click', async (t) => {
 
   await page.assertTextInPreview('#context-color', 'purple-400');
 });
+
+test('Use React context without reducer', async (t) => {
+  await t.click('#storybook-react-context');
+
+  await page.selectSidebarItem('No Reducer');
+
+  await page.assertTextInPreview('#context-color', 'red-400');
+
+  await page.selectPanel('Controls');
+
+  await page.selectControl('blue');
+
+  await page.assertTextInPreview('#context-color', 'blue-400');
+
+  await page.selectControl('green');
+
+  await page.assertTextInPreview('#context-color', 'green-400');
+});

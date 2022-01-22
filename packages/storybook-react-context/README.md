@@ -25,10 +25,11 @@ export default {
 
 ### Options
 
-`withReactContext` takes an argument which is an object with the following optional keys:
+`withReactContext` takes an argument which is an object with the following optional properties:
 
 - `context` - custom context returned by `React.createContext`
 - `reducer` - custom reducer (defaults to a simple assignment of dispatch action on the current state)
+- 'useReducer' - when set to `false` avoids using `useReducer` hook in provider value, instead pass the `initialState` directly
 - `initialState` - initial state to use in useReducer for context provider value
 
 Initial context state can also be set in parameters using `initialState` key:
