@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.8.8",
   "scripts": {
-    "storybook": "start-storybook -p 6006 --ci -s ../__fixtures__",
-    "build-storybook": "build-storybook -s ../__fixtures__ -o ../build/react"
+    "storybook": "start-storybook -p 6006 --ci",
+    "build-storybook": "build-storybook -o ../build/react"
   },
   "dependencies": {
     "react": "17.0.2",

@@ -1,5 +1,7 @@
 module.exports = {
+  features: { postcss: false },
   stories: ['../**/*.stories.js'],
+  staticDirs: ['../../__fixtures__'],
   addons: [
     'storybook-fixtures',
     '@storybook/addon-essentials',
