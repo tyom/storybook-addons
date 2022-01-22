@@ -1,5 +1,5 @@
 import { keyBy } from 'storybook-fixtures';
-import 'tailwindcss/utilities.css';
+import 'tailwindcss/dist/utilities.css';
 import pantheraData from '../__fixtures__/panthera.json';
 
 const pantheraCollection = Object.values(pantheraData);

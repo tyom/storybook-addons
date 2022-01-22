@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "storybook-fixtures": "*",
-    "tailwindcss": "^3.0.15",
+    "tailwindcss": "^2.2.7",
     "vue": "^2.6.14"
   },
   "devDependencies": {
