@@ -1,140 +1,132 @@
 import React from 'react';
 import { withReactContext } from 'storybook-react-context';
 
-const Component = ({ children, color, loading, onClick }) => (
-  <div className="font-sans max-w-sm rounded overflow-hidden shadow-lg bg-white p-4">
-    {children}
-    <hr />
-    {loading && (
-      <p id="context-loading" className="text-gray-600 my-6">
-        Loading…
-      </p>
-    )}
-    <p>
-      Color:{' '}
-      <span id="context-color" className={`p-2 bg-${color}`}>
-        {color}
-      </span>
-    </p>
-    {onClick && (
-      <p className="mt-6">
-        <button
-          type="button"
-          id="context-button"
-          className="py-2 px-4 text-base rounded border-none bg-gray-300 hover:bg-gray-400"
-          onClick={onClick}
-        >
-          Toggle colour
-        </button>
-      </p>
-    )}
-  </div>
-);
-
-const getNextColor = (currentColor) => {
-  const colors = [
-    'red-400',
-    'green-400',
-    'blue-400',
-    'yellow-600',
-    'purple-400',
-    'pink-400',
-  ];
-  const currentIndex = colors.findIndex((c) => c === currentColor);
-  const nextIndex = currentIndex + 1 === colors.length ? 0 : currentIndex + 1;
-  return colors[nextIndex];
-};
+const ExampleContext = React.createContext();
 
 export default {
   title: 'storybook-react-context',
   decorators: [
     withReactContext({
-      initialState: {
-        color: 'blue-400',
-      },
+      Context: ExampleContext,
+      initialState: { authenticated: false },
     }),
   ],
+  parameters: {
+    options: {
+      showPanel: false,
+    },
+  },
 };
 
-export const ChangeContextOnMount = (_, { context: [state, dispatch] }) => {
+// Setup
+
+const PureComponent = ({ children, authenticated }) => (
+  <div className="font-sans max-w-sm rounded shadow-lg bg-white p-4">
+    {children}
+    <h1
+      id="auth-status"
+      className={`rounded text-center p-4 m-0 bg-${authenticated ? 'green' : 'red'}-400`}
+    >
+      {authenticated ? 'Authenticated' : 'Unauthenticated'}
+    </h1>
+  </div>
+);
+
+const ComponentWithContext = ({ children }) => {
+  const ctx = React.useContext(ExampleContext);
+  // Either a tuple from reducer, object from the custom provider hook or initialState
+  const state = Array.isArray(ctx) ? ctx[0] : ctx.state || ctx;
+  return <PureComponent {...state}>{children}</PureComponent>;
+};
+
+const Toolbar = ({ onToggle }) => (
+  <div className="bg-gray-500 p-4 max-w-sm mt-2 rounded">
+    <button type="button" onClick={onToggle} id="context-button">
+      Toggle value
+    </button>
+  </div>
+);
+
+// build your own provider value to be injected into the context provider.
+const useProviderValue = (initialState) => {
+  const [state = initialState, setState] = React.useState();
+  return {
+    state,
+    setState,
+  };
+};
+
+// Stories
+
+export const SimulateLoading = (_, { context: { state, setState } }) => {
   React.useEffect(() => {
     if (state.loaded) return () => {};
-
-    const timeout = setTimeout(() => {
-      dispatch({
-        loaded: true,
-        color: 'red-400',
-      });
+    const id = setTimeout(() => {
+      setState({ authenticated: true, loaded: true });
     }, 2000);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+    return () => clearTimeout(id);
+  }, [state.loaded]);
 
   return (
-    <Component title="Context changes" color={state.color} loading={!state.loaded}>
-      <h2>Context change on mount</h2>
-      <p>
-        Context is initialised with values, then updated after 2 seconds to emulate
-        loading.
+    <ComponentWithContext>
+      <p className="">Changing the context from story's useEffect.</p>
+      <p className="mb-5" id="loading-status">
+        {state.loaded ? 'Loaded.' : 'Loading…'}
       </p>
-    </Component>
+    </ComponentWithContext>
   );
 };
-
-export const ChangeContextOnClick = (_, { context: [state, dispatch] }) => {
-  function handleButtonToggle() {
-    dispatch({
-      color: getNextColor(state.color),
-    });
-  }
-
-  return (
-    <Component
-      title="Context changes"
-      color={state.color}
-      loading={!state.loaded}
-      onClick={handleButtonToggle}
-    >
-      <h2>Context change on click</h2>
-      <p>Context is updated on button click.</p>
-    </Component>
-  );
-};
-ChangeContextOnClick.parameters = {
-  initialState: {
-    loaded: true,
+SimulateLoading.parameters = {
+  reactContext: {
+    useProviderValue,
   },
 };
 
-export const NoReducer = ({ color }, { context: state }) => {
-  return (
-    <Component title="Context changes" color={state[color]}>
-      <h2>Context with no reducer</h2>
-      <p>
-        Use args (see <strong>Controls</strong> in addons) to select state from React
-        context.
-      </p>
-    </Component>
-  );
-};
-NoReducer.argTypes = {
-  color: {
-    options: ['red', 'green', 'blue'],
-    control: { type: 'radio' },
+export const ChangeOnInteraction = (_, { context: [state, setState] }) => (
+  <>
+    <ComponentWithContext>
+      <p className="mb-5">Changing the context on interaction.</p>
+    </ComponentWithContext>
+    <Toolbar onToggle={() => setState({ authenticated: !state.authenticated })} />
+  </>
+);
+ChangeOnInteraction.parameters = {
+  reactContext: {
+    reducer: (state, action) => ({
+      ...state,
+      ...action,
+    }),
   },
 };
-NoReducer.args = {
-  color: 'red',
+
+export const StaticInitialContext = () => (
+  <ComponentWithContext>
+    <p>Set custom context from story.</p>
+  </ComponentWithContext>
+);
+StaticInitialContext.parameters = {
+  reactContext: {
+    initialState: { authenticated: true },
+  },
 };
-NoReducer.decorators = [
-  withReactContext({
-    useReducer: false,
-    initialState: {
-      red: 'red-400',
-      blue: 'blue-400',
-      green: 'green-400',
-    },
-  }),
-];
+
+export const UpdateContextFromArgs = (args) => {
+  return (
+    <ComponentWithContext>
+      <p>Change context from Storybook Controls.</p>
+    </ComponentWithContext>
+  );
+};
+UpdateContextFromArgs.args = {
+  authenticated: false,
+};
+UpdateContextFromArgs.parameters = {
+  reactContext: {
+    // useProviderValue exposes args as second parameter
+    useProviderValue: (state, args) => args,
+  },
+  options: {
+    showPanel: true,
+  },
+};
