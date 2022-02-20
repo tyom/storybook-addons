@@ -23,47 +23,59 @@ export default {
 };
 ```
 
+The decorator can also be preconfigured for all stories in the module:
+
+```js
+export default {
+  title: 'some story',
+  decorators: [
+    withReactContext({
+      Context: ExampleContext,
+      initialState: { authenticated: false },
+    }),
+  ],
+};
+```
+
 ### Options
 
 `withReactContext` takes an argument which is an object with the following optional properties:
 
-- `context` - custom context returned by `React.createContext`
-- `reducer` - custom reducer (defaults to a simple assignment of dispatch action on the current state)
-- `useReducer` - when set to `false` avoids using `useReducer` hook in provider value, instead pass the `initialState` directly
-- `initialState` - initial state to use in useReducer for context provider value
+- `Context` - The context returned by `React.createContext` to provide for story's components
+- `reducer(state, action)` - custom reducer to produce the provider value or;
+- `useProviderValue(state, args)` - a function (hook) to be used to derive the provider value (provides story args as second argument to link with Storybook Controls)
+- `initialState` - the initial state to use for the provider value
 
-Initial context state can also be set in parameters using `initialState` key:
+The decorator options can also be se set in story parameters using `reactContext` key:
 
 ```js
 someComponent.parameters = {
-  initialState: {
-    defaultValue: true,
-  },
+  reactContext: {
+    initialState: {
+      defaultValue: true,
+    },
+    reducer: (state, action) => ({ ...state, action })
+  }
 };
 ```
-
-When both `initialState` values (in decorator argument and parameters) are objects
-they are combined (assigned), otherwise the either `initialState` in parameters or
-decorator argument will be used (in that order).
 
 Component will be wrapped with another component which uses the context hook and returns
 it to the story via story context as the result of `React.useReducer` with `reducer`
 function and `initialState`.
 
+The `useProviderValue` hook can be used to link the context with Storybook Controls.
+
 ```js
 import { withReactContext } from 'storybook-react-context';
 
-export const myStory = (_, { context: [state, dispatch] }) => (
+export const myStory = ({ myValue }) => (
   <button onClick={() => dispatch({ text: 'Changed' })}>{state.text}</button>
 );
-myStory.decorators = [withReactContext({
-  initialState: {
-    title: 'Initial #1'
-  }
-})];
-myStory.parameters.initialState = {
-  initialState: {
-    text: 'Initial #2',
-  },
+myStory.args = {
+  myValue: true,
+}
+myStory.decorators = [withReactContext];
+myStory.parameters.reactContextState = {
+  useProviderValue: (state, args) => args
 };
 ```
