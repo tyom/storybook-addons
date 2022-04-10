@@ -17,7 +17,7 @@
     "cross-fetch": "^3.1.5",
     "lodash": "^4.17.21",
     "qs": "^6.10.3",
-    "store2": "^2.13.1"
+    "store2": "^2.13.2"
   },
   "devDependencies": {
     "fetch-mock-jest": "^1.5.1"
