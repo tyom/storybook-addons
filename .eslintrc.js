@@ -6,6 +6,7 @@ module.exports = {
       files: ['**/*.ts', '**/*.tsx', '**/*.stories.js'],
       rules: {
         'react/prop-types': 'off',
+        'react/require-default-props': 'off',
       },
     },
     {
