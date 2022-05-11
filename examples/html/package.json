@@ -7,14 +7,15 @@
     "build-storybook": "build-storybook -o ../build/html"
   },
   "dependencies": {
-    "storybook-fixtures": "*",
-    "tailwindcss": "^2.2.7"
+    "storybook-fixtures": "*"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^6.4.21",
-    "@storybook/addon-storysource": "^6.4.21",
-    "@storybook/addons": "^6.4.21",
-    "@storybook/html": "^6.4.21",
-    "@storybook/theming": "^6.4.21"
+    "@storybook/addon-essentials": "^6.5.7",
+    "@storybook/addon-storysource": "^6.5.7",
+    "@storybook/addons": "^6.5.7",
+    "@storybook/builder-webpack5": "^6.5.7",
+    "@storybook/manager-webpack5": "^6.5.7",
+    "@storybook/html": "^6.5.7",
+    "@storybook/theming": "^6.5.7"
   }
 }
