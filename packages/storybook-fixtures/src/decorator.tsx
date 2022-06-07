@@ -16,9 +16,12 @@ export const withFixtures = makeDecorator({
     { options = {}, parameters = {} }
   ) => {
     const channel = addons.getChannel();
-    const urlQuery = qs.parse(global.parent.location.search, {
-      ignoreQueryPrefix: true,
-    });
+    // Use in isolated mode outside of Storybook UI to get fixtures state from query
+    const urlQuery = window.frameElement
+      ? {}
+      : qs.parse(window.location.search, {
+          ignoreQueryPrefix: true,
+        });
 
     const fixturesInput = useParameter(PARAM_KEY) as {};
     const { fixtures: initialFixtures, settings } = processInput(fixturesInput);
