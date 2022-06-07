@@ -11,7 +11,7 @@ const Card = {
         class="bg-cover h-64"
         :style="backgroundImageStyle"
       />
-      <div data-id="body" class="px-6 py-4" :class="'bg-' + $props.bgColor">
+      <div data-id="body" class="px-6 py-4" :class="'bg-' + $data.bgColor">
         <h2 data-id="title" class="font-bold text-2xl mb-2 mt-0" :class="'text-' + fixture.textColor">
           {{ fixture.title }}
         </h2>
@@ -39,7 +39,11 @@ export const FixtureWithArgs = (args, { fixtures: [genus, textColor] }) => {
       fixture: {
         default: { ...genus, textColor },
       },
-      bgColor: args.bgColor,
+    },
+    data() {
+      return {
+        bgColor: args.bgColor,
+      };
     },
   };
 };
