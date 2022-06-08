@@ -1,13 +1,13 @@
 {
   "name": "vue-example",
   "private": true,
-  "version": "0.8.8",
+  "version": "0.9.0",
   "scripts": {
     "storybook": "start-storybook -p 6009 --ci",
     "build-storybook": "build-storybook -o ../build/vue"
   },
   "dependencies": {
-    "storybook-fixtures": "*",
+    "storybook-fixtures": "^0.12.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

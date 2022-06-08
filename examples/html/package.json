@@ -1,21 +1,21 @@
 {
   "name": "html-example",
   "private": true,
-  "version": "0.8.8",
+  "version": "0.9.0",
   "scripts": {
     "storybook": "start-storybook -p 6008 --ci",
     "build-storybook": "build-storybook -o ../build/html"
   },
   "dependencies": {
-    "storybook-fixtures": "*"
+    "storybook-fixtures": "^0.12.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^6.5.8",
     "@storybook/addon-storysource": "^6.5.8",
     "@storybook/addons": "^6.5.8",
     "@storybook/builder-webpack5": "^6.5.8",
-    "@storybook/manager-webpack5": "^6.5.8",
     "@storybook/html": "^6.5.8",
+    "@storybook/manager-webpack5": "^6.5.8",
     "@storybook/theming": "^6.5.8"
   }
 }
